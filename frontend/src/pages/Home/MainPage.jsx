@@ -58,9 +58,10 @@ const TitleContainer = styled.div`
   text-align: right;
   color: white;
   font-family: 'Luckiest Guy';
-  font-size: 4.5vw;
+  font-size: 5vw;
   line-height: 1.2;
-  margin-top: -5vh;
+  margin-top: -25vh;
+  margin-left: 70vh;
 `;
 
 const Highlight = styled.span`
