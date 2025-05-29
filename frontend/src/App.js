@@ -1,13 +1,16 @@
-import React from 'react';
-import GlobalStyle from './styles/GlobalStyle';
-import MainPage from './pages/Home/MainPage';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/Home/MainPage";
+import TalkBoardPage from "./pages/Talk/TalkBoardPage";
+import WritePage from "./pages/Talk/WritePage";
 
 function App() {
   return (
-    <>
-      <GlobalStyle />
-      <MainPage />
-    </>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/talk" element={<TalkBoardPage />} />
+      <Route path="/talk/write" element={<WritePage />} />
+    </Routes>
   );
 }
 
