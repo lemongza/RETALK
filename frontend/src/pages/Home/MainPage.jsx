@@ -1,10 +1,11 @@
 // src/pages/Home/MainPage.jsx
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom'; // ✅ 추가
 
 const Wrapper = styled.div`
   width: 100vw;
-  min-height: 200vh; /* 상하 합친 높이 */
+  min-height: 200vh;
   background: #052210;
   position: relative;
 `;
@@ -49,6 +50,7 @@ const LoginButton = styled.div`
   font-family: 'Pretendard';
   font-weight: 500;
   font-size: 1rem;
+  cursor: pointer; /* ✅ 클릭 가능한 UI로 표시 */
 `;
 
 const FirstSection = styled.section`
@@ -115,6 +117,8 @@ const Footer = styled.footer`
 `;
 
 export default function MainPage() {
+  const navigate = useNavigate(); // ✅ react-router-dom의 훅
+
   return (
     <Wrapper>
       <Header>
@@ -122,7 +126,7 @@ export default function MainPage() {
         <NavGroup>
           <NavItem>Read</NavItem>
           <NavItem>Talk</NavItem>
-          <LoginButton>Login</LoginButton>
+          <LoginButton onClick={() => navigate('/login')}>Login</LoginButton>
         </NavGroup>
       </Header>
 
