@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../api/axioInstance";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100vw;
