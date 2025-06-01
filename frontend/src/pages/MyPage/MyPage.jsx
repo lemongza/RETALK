@@ -454,14 +454,8 @@ export default function MyPage() {
               <StatNumber>{userData.stats.activeMeetings}</StatNumber>
               <StatLabel>진행중인 모임</StatLabel>
             </StatBox>
-            <StatBox>
-              <StatNumber>{userData.stats.booksRead}</StatNumber>
-              <StatLabel>읽은 책</StatLabel>
-            </StatBox>
-            <StatBox>
-              <StatNumber>{userData.stats.reviews}</StatNumber>
-              <StatLabel>작성한 리뷰</StatLabel>
-            </StatBox>
+            여기에 개인정보 보여주고 수정 만들거에염
+    
           </StatsContainer>
         </ProfileSection>
 

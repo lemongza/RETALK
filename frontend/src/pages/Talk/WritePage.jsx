@@ -8,7 +8,10 @@ import "react-datepicker/dist/react-datepicker.css";
 const Container = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: rem;
+    color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
 `;
 
 const TopBar = styled.div`

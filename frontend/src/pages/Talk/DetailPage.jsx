@@ -347,7 +347,7 @@ export default function DetailPage() {
           <center>
             <HalfButton onClick={() => setShowConfirm(true)}>
               참여하기
-            </HalfButton>{" "}
+            </HalfButton>
             {showConfirm && (
               <Popup
                 MainText="참여 요청을 보내시겠습니까?"
