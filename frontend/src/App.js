@@ -1,16 +1,16 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import HomePage from "./pages/Home/MainPage";
-import TalkBoardPage from "./pages/Talk/TalkBoardPage";
-import WritePage from "./pages/Talk/WritePage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SubRouter from "./components/SubRouter";
+import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/talk" element={<TalkBoardPage />} />
-      <Route path="/talk/write" element={<WritePage />} />
-    </Routes>
+    <BrowserRouter basename="/retalk">
+      <Routes>
+        <Route path="/*" element={<SubRouter />}></Route>
+        <Route path="/not-found" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

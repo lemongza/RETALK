@@ -4,88 +4,8 @@ import axios from "../../api/axioInstance";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-const Wrapper = styled.div`
-  width: 100vw;
-  min-height: 200vh; /* 상하 합친 높이 */
-  background: #052210;
-  position: relative;
-`;
-
-const Header = styled.div`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5vw;
-  background: #052210;
-  z-index: 10;
-`;
-
-const RetalkLogo = styled.div`
-  font-family: "Luckiest Guy";
-  font-size: 2rem;
-  color: #00c853;
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  width: 200px;
-  text-align: end;
-  padding-bottom: 5px;
-`;
-
-const NavGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 2vw;
-`;
-
-const NavItem = styled.div`
-  font-family: "Pretendard";
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
-  display: flex;
-  align-items: center;
-  height: 40px;
-  padding: 0 10px;
-
-  &:hover {
-    color: #00c853;
-  }
-`;
-
-const LoginButton = styled.div`
-  background: #00c853;
-  padding: 0.4rem 1.2rem;
-  border-radius: 20px;
-  color: white;
-  font-family: "Pretendard";
-  font-weight: 500;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  height: 40px;
-  cursor: pointer;
-
-  &:hover {
-    background: #00b248;
-  }
-`;
-
-const Footer = styled.footer`
-  font-family: "Pretendard";
-  font-size: 1rem;
-  color: #d9d9d9;
-  position: absolute;
-  bottom: 20px;
-  left: 68px;
-`;
-
 const BoardContainer = styled.div`
-  padding: 120px 5vw 0;
+  //padding: 120px 5vw 0;
   max-width: 1200px;
   margin: 0 auto;
 `;
@@ -179,12 +99,15 @@ const BoardList = styled.div`
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 `;
 
 const BoardItem = styled.div`
   padding: 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  color: #c4c4c4;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -197,48 +120,46 @@ const BoardItem = styled.div`
 const Title = styled.div`
   font-size: 1.1rem;
   font-weight: 500;
+  text-align: left;
+  flex: 1;
+  padding-left: 30px;
+  color: white;
 `;
 
 const MetaInfo = styled.div`
-  display: flex;
-  gap: 20px;
+  //display: flex;
+
   color: #888;
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  span:nth-child(1),
+  span:nth-child(2) {
+    text-align: right;
+    width: 200px;
+    gap: 10px;
+  }
+
+  span:nth-child(3) {
+    text-align: right;
+    width: 130px;
+    gap: 10px;
+  }
+
+  span:nth-child(4) {
+    text-align: right;
+    width: 100px;
+
+    gap: 10px;
+  }
+
+  span {
+    color: #ccc;
+    font-size: 0.9rem;
+  }
 `;
 
-// // 더미 데이터
-// const dummyPosts = [
-//   {
-//     id: 1,
-//     title: "빛과 실 외고 토론하실 분 구해요",
-//     author: "은지123",
-//     date: "2024-03-20",
-//     views: 42,
-//   },
-//   {
-//     id: 2,
-//     title: "토론 같이 하실 분 찾습니다",
-//     author: "토론왕",
-//     date: "2024-03-19",
-//     views: 38,
-//   },
-//   {
-//     id: 3,
-//     title: "빛과 실 독서토론 하실 분~",
-//     author: "책벌레",
-//     date: "2024-03-18",
-//     views: 65,
-//   },
-//   {
-//     id: 4,
-//     title: "독서토론 초보 환영합니다",
-//     author: "독서매니아",
-//     date: "2024-03-17",
-//     views: 27,
-//   },
-// ];
-
-export default function TalkBoardPage() {
+export default function TalkBoard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("latest");
   const [posts, setPosts] = useState([]);
@@ -250,7 +171,7 @@ export default function TalkBoardPage() {
         const response = await axios.get("/meetings", {
           headers: {
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldW5qaUB0ZXN0LmNvbSIsImlhdCI6MTc0ODQ5NjE3NCwiZXhwIjoxNzQ4NTgyNTc0fQ.r7uOraHWogDXQb4sreFLWNzLohi96g1SO2Wz83R-zF0",
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldW5qaUB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzQ4NzAzMDcxLCJleHAiOjE3NDg3ODk0NzF9.4rOaZ_ajs3DOl-CuLKF5qSD-t7hvRakQE3kUqQCuB5o",
           },
         });
 
@@ -288,17 +209,10 @@ export default function TalkBoardPage() {
     return 0;
   });
 
-  return (
-    <Wrapper>
-      <Header>
-        <RetalkLogo>RETALK</RetalkLogo>
-        <NavGroup>
-          <NavItem>Read</NavItem>
-          <NavItem>Talk</NavItem>
-          <LoginButton>Login</LoginButton>
-        </NavGroup>
-      </Header>
+  const navigate = useNavigate();
 
+  return (
+    <div styled={"margin:0 auto"}>
       <BoardContainer>
         <SearchContainer>
           <SortSelect
@@ -314,34 +228,35 @@ export default function TalkBoardPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <WriteButton>글쓰기</WriteButton>
+            <WriteButton onClick={() => navigate("/talk/write")}>
+              글쓰기
+            </WriteButton>
           </SearchGroup>
         </SearchContainer>
 
-        <BoardList>
+        <BoardList style={{ cursor: "default", }}>
+        
+
           {sortedPosts.map((post) => {
             return (
-              <BoardItem key={post.id}>
-                <Title>{post.title}</Title>
-                <MetaInfo>
-                  <span>{post.host?.name}</span>
-                  <span>{post.bookTitle}</span>
-                  <span>{post.bookAuthor}</span>
-                  <span>{post.startDate?.split("T")[0]}</span>
-                  <span>조회 {post.views || 0} </span>
-                </MetaInfo>
+              <BoardItem
+              key={post.id}
+              onClick={() => navigate(`/talk/${post.id}`)}
+              >
+              <span style={{ width: 60, textAlign: "center", color: post.active ? "#00e676" : "#ff5252" }}>
+                {post.active ? "모집중" : "마감"}
+              </span>
+              <Title>{post.title}</Title>
+              <MetaInfo>
+                <span>{post.bookTitle}</span>
+                <span>{post.bookAuthor}</span>
+                <span>{post.startDate?.split("T")[0]}</span>
+              </MetaInfo>
               </BoardItem>
             );
           })}
         </BoardList>
       </BoardContainer>
-
-      <Footer>
-        <div>
-          <b>Github 🔗</b>
-        </div>
-        <div>Developer @김민정 @장수원 @정혜영 @조은지 @최지우 @홍영준</div>
-      </Footer>
-    </Wrapper>
+    </div>
   );
 }
