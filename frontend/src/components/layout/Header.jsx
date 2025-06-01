@@ -9,18 +9,19 @@ const MainHeader = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #052210;
 `;
 const Header = styled.div`
-  //position: fixed;
+  position: fixed;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  height: 100px;
+  height: 88px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   line-height: 80px;
-  //background: #052210;
+  background: #052210;
   z-index: 10;
 `;
 const RetalkLogo = styled.div`
@@ -75,8 +76,8 @@ export default function Banner() {
   };
   const handleHomeClick = () => {
     navigate("/");
-  };  
-  
+  };
+
   return (
     <MainHeader>
       <Header>

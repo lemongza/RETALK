@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const Footer = styled.div`
+  transform: translateY(88px);
   max-width: 1200px;
   width: 100%;
   height: 109px;

@@ -37,20 +37,19 @@
   }
 }
 
-
-html,body{
-    height: 100%;
-    width: auto;
-    margin: 0px;
-    padding: 0px;
-    background-color: #052210;
-
+html,
+body {
+  height: 100%;
+  width: auto;
+  margin: 0px;
+  padding: 0px;
+  background-color: #052210;
 }
 
-.main-container{
-
-padding: 10px 0;
-   max-width: 1440px;
-    min-height: 90vh;
-    margin: 0 auto;
+.main-container {
+  transform: translateY(88px);
+  padding-top: 50px;
+  max-width: 1440px;
+  min-height: 90vh;
+  margin: 0 auto;
 }
