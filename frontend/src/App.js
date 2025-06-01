@@ -3,7 +3,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import GlobalStyle from './styles/GlobalStyle';
 import MainPage from './pages/Home/MainPage';
-import LoginPage from './pages/Login/LoginPage'; // ← LoginPage 경로 맞게 조정
+import LoginPage from './pages/Login/LoginPage';
+import SignupPage from './pages/Login/SignupPage'; // ← 이거 쓸 거니까 유지
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} /> {/* ✅ 이거 추가 */}
         </Routes>
       </Router>
     </>

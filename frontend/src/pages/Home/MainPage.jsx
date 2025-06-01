@@ -1,7 +1,7 @@
 // src/pages/Home/MainPage.jsx
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom'; // ✅ 추가
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -27,6 +27,7 @@ const RetalkLogo = styled.div`
   font-family: 'Luckiest Guy';
   font-size: 2rem;
   color: #00C853;
+  cursor: pointer;
 `;
 
 const NavGroup = styled.div`
@@ -50,7 +51,7 @@ const LoginButton = styled.div`
   font-family: 'Pretendard';
   font-weight: 500;
   font-size: 1rem;
-  cursor: pointer; /* ✅ 클릭 가능한 UI로 표시 */
+  cursor: pointer;
 `;
 
 const FirstSection = styled.section`
@@ -117,12 +118,20 @@ const Footer = styled.footer`
 `;
 
 export default function MainPage() {
-  const navigate = useNavigate(); // ✅ react-router-dom의 훅
+  const navigate = useNavigate();
+
+  const goToMain = () => {
+    if (window.location.pathname === '/') {
+      window.location.href = '/'; // 새로고침
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
     <Wrapper>
       <Header>
-        <RetalkLogo>RETALK</RetalkLogo>
+        <RetalkLogo onClick={goToMain}>RETALK</RetalkLogo>
         <NavGroup>
           <NavItem>Read</NavItem>
           <NavItem>Talk</NavItem>
