@@ -67,6 +67,7 @@ export default function SignupPage() {
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
+  const [nickName, setNickName] = useState(''); // ✅ 닉네임 추가
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -80,8 +81,9 @@ export default function SignupPage() {
     }
 
     try {
-      const res = await axios.post('http://localhost:8080/api/auth/signup', {
+      await axios.post('http://localhost:8080/api/auth/signup', {
         name,
+        nickName, // ✅ 닉네임 포함
         email,
         password
       });
@@ -101,6 +103,10 @@ export default function SignupPage() {
         <Field>
           <Label>이름</Label>
           <Input value={name} onChange={(e) => setName(e.target.value)} />
+        </Field>
+        <Field>
+          <Label>닉네임</Label> {/* ✅ 닉네임 필드 */}
+          <Input value={nickName} onChange={(e) => setNickName(e.target.value)} />
         </Field>
         <Field>
           <Label>이메일</Label>
