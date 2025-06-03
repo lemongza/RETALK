@@ -1,23 +1,22 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import GlobalStyle from './styles/GlobalStyle';
-import MainPage from './pages/Home/MainPage';
+import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/Login/LoginPage';
-import SignupPage from './pages/Login/SignupPage'; // ← 이거 쓸 거니까 유지
+import SignupPage from './pages/Login/SignupPage';
+import MainPage from './pages/Home/MainPage';
 
 function App() {
   return (
-    <>
-      <GlobalStyle />
+    <AuthProvider>
       <Router>
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} /> {/* ✅ 이거 추가 */}
+          <Route path="/signup" element={<SignupPage />} />
         </Routes>
       </Router>
-    </>
+    </AuthProvider>
   );
 }
 

@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const Header = styled.div`
+const HeaderWrapper = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
@@ -21,19 +21,24 @@ const Header = styled.div`
   padding: 0 5vw;
   background: #052210;
   z-index: 10;
+  box-sizing: border-box;
 `;
 
 const RetalkLogo = styled.div`
   font-family: 'Luckiest Guy';
-  font-size: 2rem;
+  font-size: clamp(1.2rem, 2vw, 2.5rem);
   color: #00C853;
   cursor: pointer;
+  white-space: nowrap;
 `;
 
 const NavGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 2vw;
+  flex-wrap: wrap;
+  gap: 1vw;
+  max-width: 50vw;
+  justify-content: flex-end;
 `;
 
 const NavItem = styled.div`
@@ -41,17 +46,20 @@ const NavItem = styled.div`
   font-size: 1rem;
   font-weight: 600;
   color: white;
+  white-space: nowrap;
 `;
 
-const LoginButton = styled.div`
+const AuthButton = styled.button`
+  padding: 0.4rem 1rem;
   background: #00C853;
-  padding: 0.4rem 1.2rem;
+  border: none;
   border-radius: 20px;
   color: white;
   font-family: 'Pretendard';
   font-weight: 500;
   font-size: 1rem;
   cursor: pointer;
+  white-space: nowrap;
 `;
 
 const FirstSection = styled.section`
@@ -119,10 +127,21 @@ const Footer = styled.footer`
 
 export default function MainPage() {
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
+  const handleAuthClick = () => {
+    if (token) {
+      localStorage.removeItem('token');
+      alert('로그아웃 되었습니다.');
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
+  };
 
   const goToMain = () => {
     if (window.location.pathname === '/') {
-      window.location.href = '/'; // 새로고침
+      window.location.href = '/';
     } else {
       navigate('/');
     }
@@ -130,14 +149,16 @@ export default function MainPage() {
 
   return (
     <Wrapper>
-      <Header>
+      <HeaderWrapper>
         <RetalkLogo onClick={goToMain}>RETALK</RetalkLogo>
         <NavGroup>
           <NavItem>Read</NavItem>
           <NavItem>Talk</NavItem>
-          <LoginButton onClick={() => navigate('/login')}>Login</LoginButton>
+          <AuthButton onClick={handleAuthClick}>
+            {token ? 'Logout' : 'Login'}
+          </AuthButton>
         </NavGroup>
-      </Header>
+      </HeaderWrapper>
 
       <FirstSection>
         <TitleBlock>

@@ -11,6 +11,8 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 0 8vw;
+  box-sizing: border-box;
 `;
 
 const Title = styled.div`
@@ -18,41 +20,47 @@ const Title = styled.div`
   font-size: 1.25rem;
   color: #ffffff;
   margin-bottom: 40px;
+  text-align: center;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 24px;
+  width: 100%;
+  max-width: 500px;
 `;
 
 const Field = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const Label = styled.label`
   font-family: 'Pretendard';
   font-size: 1rem;
   color: #c4c4c4;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 `;
 
 const Input = styled.input`
-  width: 500px;
-  height: 32px;
+  width: 100%;
+  height: 40px;
   padding: 0 0.5rem;
   background-color: #202020;
   border: 1px solid #383838;
   color: white;
-  border-radius: 8px;
+  border-radius: 10px;
   font-family: 'Pretendard';
+  font-size: 1rem;
+  box-sizing: border-box;
 `;
 
 const Button = styled.button`
-  width: 500px;
+  width: 100%;
   height: 40px;
-  margin-top: 30px;
+  margin-top: 16px;
   background-color: #00C853;
   color: white;
   font-family: 'Pretendard';
@@ -67,7 +75,7 @@ export default function SignupPage() {
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
-  const [nickName, setNickName] = useState(''); // ✅ 닉네임 추가
+  const [nickName, setNickName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -83,7 +91,7 @@ export default function SignupPage() {
     try {
       await axios.post('http://localhost:8080/api/auth/signup', {
         name,
-        nickName, // ✅ 닉네임 포함
+        nickName,
         email,
         password
       });
@@ -105,7 +113,7 @@ export default function SignupPage() {
           <Input value={name} onChange={(e) => setName(e.target.value)} />
         </Field>
         <Field>
-          <Label>닉네임</Label> {/* ✅ 닉네임 필드 */}
+          <Label>닉네임</Label>
           <Input value={nickName} onChange={(e) => setNickName(e.target.value)} />
         </Field>
         <Field>
