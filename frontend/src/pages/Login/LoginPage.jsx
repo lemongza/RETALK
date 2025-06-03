@@ -1,7 +1,7 @@
-// src/pages/LoginPage.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -56,11 +56,16 @@ const Label = styled.label`
   margin-top: 1rem;
 `;
 
-const Line = styled.div`
+const Input = styled.input`
   width: 100%;
-  height: 1px;
-  background: #ffffff;
-  margin-top: 0.2rem;
+  height: 32px;
+  margin-top: 0.3rem;
+  padding: 0 0.5rem;
+  background: #202020;
+  border: 1px solid #383838;
+  color: white;
+  border-radius: 8px;
+  font-family: 'Pretendard';
 `;
 
 const LoginButton = styled.button`
@@ -93,6 +98,25 @@ const SignupButton = styled.button`
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post('http://localhost:8080/api/auth/login', {
+        email,
+        password,
+      });
+
+      const token = res.data.token;
+      localStorage.setItem('token', token); // 토큰 저장
+      alert('로그인 성공!');
+      navigate('/'); // 메인 페이지로 이동
+    } catch (err) {
+      alert('로그인 실패! 이메일 또는 비밀번호를 확인하세요.');
+      console.error(err);
+    }
+  };
 
   return (
     <Wrapper>
@@ -105,10 +129,10 @@ export default function LoginPage() {
         <RightSection>
           <Logo>RETALK</Logo>
           <Label>이메일</Label>
-          <Line />
+          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <Label>비밀번호</Label>
-          <Line />
-          <LoginButton>로그인</LoginButton>
+          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <LoginButton onClick={handleLogin}>로그인</LoginButton>
           <SignupButton onClick={() => navigate('/signup')}>회원가입</SignupButton>
         </RightSection>
       </Content>
