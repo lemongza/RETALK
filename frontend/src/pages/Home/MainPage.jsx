@@ -1,20 +1,14 @@
 // src/pages/Home/MainPage.jsx
 import styled from "styled-components";
-import { useEffect } from "react";
-
-const Wrapper = styled.div`
-  width: 100vw;
-  min-height: 200vh;
-  background: #052210;
-  position: relative;
-`;
 
 const FirstSection = styled.section`
-  height: 100vh;
+  height: 70vh;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding-right: 10vw;
+  padding-left: 10vw;
+  padding-top: 5vh;
 `;
 
 const TitleBlock = styled.div`
@@ -23,7 +17,7 @@ const TitleBlock = styled.div`
   font-family: "Luckiest Guy";
   font-size: 6vw;
   line-height: 1.2;
-  margin-bottom: 20vh;
+  margin-bottom: 8vh; /* Reduce bottom margin */
 `;
 
 const Highlight = styled.span`
@@ -31,15 +25,14 @@ const Highlight = styled.span`
 `;
 
 const SecondSection = styled.section`
-  height: 100vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   text-align: center;
-  padding-top: 0vh;
-  padding-bottom: 20vh;
   color: white;
+  padding-bottom: 10vh; /* Remove extra margin if any */
 `;
 
 const SubTitle = styled.div`
@@ -50,10 +43,9 @@ const SubTitle = styled.div`
 `;
 
 const MainTitle = styled.div`
-  font-family: "BMHANNA";
-  font-size: 6rem;
+  font-family: "Pretendard";
+  font-size: 4rem;
   line-height: 1.3;
-  margin-bottom: 1rem;
 `;
 
 const Description = styled.div`
@@ -69,7 +61,7 @@ export default function MainPage() {
     window.scrollTo(0, 0);
   }, []);
   return (
-    <Wrapper>
+    <div>
       <FirstSection>
         <TitleBlock>
           <div>INTERACTIVE</div>
@@ -99,6 +91,6 @@ export default function MainPage() {
           비용 없는 커뮤니티 플랫폼을 만들었습니다.
         </Description>
       </SecondSection>
-    </Wrapper>
+    </div>
   );
 }
