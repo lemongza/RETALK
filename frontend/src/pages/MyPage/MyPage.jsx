@@ -31,6 +31,8 @@ const ProfileSection = styled.div`
   border-radius: 8px;
   padding: 1.5rem;
   color: white;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ProfileInfo = styled.div`
@@ -42,6 +44,7 @@ const ProfileInfo = styled.div`
   margin-bottom: 1.5rem;
   padding-left: 1rem;
   padding-top: 1rem;
+  position: relative;
 `;
 
 const UserName = styled.h2`
@@ -54,6 +57,23 @@ const UserEmail = styled.p`
   color: #c4c4c4;
   font-size: 1rem;
   margin: 0;
+`;
+
+const EditButton = styled.button`
+  background: none;
+  border: none;
+  color: #00c853;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+
+  &:hover {
+    background: rgba(0, 200, 83, 0.1);
+    border-radius: 4px;
+  }
 `;
 
 const StatsContainer = styled.div`
@@ -268,28 +288,23 @@ const RequestActions = styled.div`
 `;
 
 const ActionButton = styled.button`
-  padding: 0.5rem 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  background: ${(props) => (props.danger ? "#FF4444" : "#00c853")};
   border: none;
   border-radius: 4px;
+  color: white;
   cursor: pointer;
   font-size: 0.9rem;
+  transition: all 0.2s;
 
-  &.approve {
-    background: #00c853;
-    color: white;
-
-    &:hover {
-      background: #00b248;
-    }
+  &:hover {
+    background: ${(props) => (props.danger ? "#ff6666" : "#00b248")};
   }
 
-  &.reject {
-    background: #ff4444;
-    color: white;
-
-    &:hover {
-      background: #cc0000;
-    }
+  &:disabled {
+    background: #666;
+    cursor: not-allowed;
   }
 `;
 
@@ -368,6 +383,24 @@ const ManageModalContent = styled(ModalContent)`
   }
 `;
 
+const ProfileActionButton = styled.button`
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: ${(props) => (props.danger ? "#FF4444" : "#c4c4c4")};
+  padding: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: all 0.2s;
+  width: 100%;
+  font-size: 0.9rem;
+
+  &:hover {
+    background: ${(props) =>
+      props.danger ? "rgba(255, 68, 68, 0.1)" : "rgba(255, 255, 255, 0.1)"};
+  }
+`;
+
 export default function MyPage() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
@@ -376,6 +409,12 @@ export default function MyPage() {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showManageModal, setShowManageModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editedNickname, setEditedNickname] = useState("");
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -434,6 +473,31 @@ export default function MyPage() {
     }
   };
 
+  //참여 요청 목록 조회
+  const fetchJoinRequests = async (meetingId) => {
+    try {
+      const response = await axios.get(`/meetings/${meetingId}/applicants`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const updatedMeetings = meetings.map((m) =>
+        m.id === meetingId ? { ...m, joinRequests: response.data } : m
+      );
+      setMeetings(updatedMeetings);
+      setSelectedMeeting((prev) =>
+        prev && prev.id === meetingId
+          ? { ...prev, joinRequests: response.data }
+          : prev
+      );
+    } catch (error) {
+      console.error("참여 요청 목록 조회 실패:", error);
+      alert("참여 요청 목록을 불러오는 데 실패했습니다.");
+    }
+  };
+
+  //참여 요청 처리
   const handleRespondToJoin = async (meetingId, userId, approve) => {
     try {
       await axios.post(
@@ -482,6 +546,89 @@ export default function MyPage() {
     }
   };
 
+  // 사용자 정보 수정 함수 추가
+  const handleUpdateUserInfo = async () => {
+    try {
+      await axios.patch(
+        "/users/me",
+        { nickname: editedNickname },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setUserData((prev) => ({
+        ...prev,
+        nickname: editedNickname,
+      }));
+      setShowEditModal(false);
+      alert("닉네임이 수정되었습니다.");
+    } catch (error) {
+      console.error("닉네임 수정 실패:", error);
+      alert("닉네임 수정에 실패했습니다.");
+    }
+  };
+
+  const handlePasswordUpdate = async () => {
+    if (newPassword !== confirmPassword) {
+      alert("새 비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      await axios.patch(
+        "/users/me",
+        {
+          password: oldPassword,
+          newPassword: newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setShowPasswordModal(false);
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      alert("비밀번호가 성공적으로 변경되었습니다.");
+    } catch (error) {
+      console.error("비밀번호 변경 실패:", error);
+      if (error.response?.status === 400) {
+        alert("현재 비밀번호가 일치하지 않습니다.");
+      } else if (error.response?.status === 404) {
+        alert("회원 정보를 찾을 수 없습니다.");
+      } else {
+        alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
+      }
+    }
+  };
+
+  const handleWithdraw = async () => {
+    if (
+      window.confirm("정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.")
+    ) {
+      try {
+        await axios.delete("/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        localStorage.removeItem("token");
+        alert("회원 탈퇴가 완료되었습니다.");
+        navigate("/login");
+      } catch (error) {
+        console.error("회원 탈퇴 실패:", error);
+        alert("회원 탈퇴에 실패했습니다.");
+      }
+    }
+  };
+
   if (loading) {
     return <Container>로딩 중...</Container>;
   }
@@ -496,8 +643,16 @@ export default function MyPage() {
         <ProfileSection>
           {/* <ProfileImage>{userData?.name?.charAt(0) || "U"}</ProfileImage> */}
           <ProfileInfo>
-            <UserName>{userData?.name || "사용자"}</UserName>
+            <UserName>{userData?.nickname || "사용자"}</UserName>
             <UserEmail>{userData?.email || ""}</UserEmail>
+            <EditButton
+              onClick={() => {
+                setEditedNickname(userData?.nickname || "");
+                setShowEditModal(true);
+              }}
+            >
+              수정
+            </EditButton>
           </ProfileInfo>
           <StatsContainer>
             <StatBox>
@@ -509,6 +664,22 @@ export default function MyPage() {
               <StatLabel>참여 모임</StatLabel>
             </StatBox>
           </StatsContainer>
+          <div style={{ marginTop: "auto", paddingTop: "2rem" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+              }}
+            >
+              <ProfileActionButton onClick={() => setShowPasswordModal(true)}>
+                비밀번호 변경
+              </ProfileActionButton>
+              <ProfileActionButton danger onClick={handleWithdraw}>
+                회원 탈퇴
+              </ProfileActionButton>
+            </div>
+          </div>
         </ProfileSection>
 
         <ContentSection>
@@ -591,6 +762,7 @@ export default function MyPage() {
                 className="manage-option"
                 onClick={() => {
                   setShowManageModal(false);
+                  fetchJoinRequests(selectedMeeting.id);
                   setShowRequestsModal(true);
                 }}
               >
@@ -638,7 +810,9 @@ export default function MyPage() {
             <RequestList>
               {selectedMeeting.joinRequests?.map((request) => (
                 <MeetingItem key={request.id}>
-                  <MeetingTitle>{request.userEmail}</MeetingTitle>
+                  <MeetingTitle>
+                    {request.nickname} ({request.email})
+                  </MeetingTitle>
                   <MeetingInfo>
                     <button
                       onClick={() =>
@@ -711,6 +885,159 @@ export default function MyPage() {
                 </div>
               )}
             </RequestList>
+          </ModalContent>
+        </Modal>
+      )}
+
+      {/* 프로필 수정 모달 추가 */}
+      {showEditModal && (
+        <Modal onClick={() => setShowEditModal(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <ModalHeader>
+              <ModalTitle>프로필 수정</ModalTitle>
+              <CloseButton onClick={() => setShowEditModal(false)}>
+                ×
+              </CloseButton>
+            </ModalHeader>
+            <div style={{ marginTop: "1.5rem" }}>
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  style={{
+                    color: "#c4c4c4",
+                    display: "block",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  닉네임
+                </label>
+                <input
+                  type="text"
+                  value={editedNickname}
+                  onChange={(e) => setEditedNickname(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    borderRadius: "4px",
+                    color: "white",
+                  }}
+                />
+              </div>
+              <div style={{ marginTop: "2rem" }}>
+                <button
+                  onClick={handleUpdateUserInfo}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    background: "#00c853",
+                    border: "none",
+                    borderRadius: "4px",
+                    color: "white",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                  }}
+                >
+                  저장
+                </button>
+              </div>
+            </div>
+          </ModalContent>
+        </Modal>
+      )}
+
+      {/* 비밀번호 변경 모달 */}
+      {showPasswordModal && (
+        <Modal onClick={() => setShowPasswordModal(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <ModalHeader>
+              <ModalTitle>비밀번호 변경</ModalTitle>
+              <CloseButton onClick={() => setShowPasswordModal(false)}>
+                ×
+              </CloseButton>
+            </ModalHeader>
+            <div style={{ marginTop: "1.5rem" }}>
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  style={{
+                    color: "#c4c4c4",
+                    display: "block",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  현재 비밀번호
+                </label>
+                <input
+                  type="password"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    borderRadius: "4px",
+                    color: "white",
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  style={{
+                    color: "#c4c4c4",
+                    display: "block",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  새 비밀번호
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    borderRadius: "4px",
+                    color: "white",
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  style={{
+                    color: "#c4c4c4",
+                    display: "block",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  새 비밀번호 확인
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    borderRadius: "4px",
+                    color: "white",
+                  }}
+                />
+              </div>
+              <div style={{ marginTop: "2rem" }}>
+                <ActionButton
+                  onClick={handlePasswordUpdate}
+                  disabled={!oldPassword || !newPassword || !confirmPassword}
+                >
+                  변경하기
+                </ActionButton>
+              </div>
+            </div>
           </ModalContent>
         </Modal>
       )}
