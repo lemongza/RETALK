@@ -1,21 +1,13 @@
 // src/pages/Home/MainPage.jsx
 import React from "react";
 import styled from "styled-components";
-import Banner from "../../components/layout/Header"; // ✅ Header 가져오기
-
-const Wrapper = styled.div`
-  width: 100vw;
-  min-height: 200vh;
-  background: #052210;
-  position: relative;
-`;
 
 const FirstSection = styled.section`
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 10vw;
+  padding: 0 10vw;
 `;
 
 const TitleBlock = styled.div`
@@ -36,10 +28,9 @@ const SecondSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   text-align: center;
-  padding-top: 0vh;
-  padding-bottom: 20vh;
+  padding: 0 10vw;
   color: white;
 `;
 
@@ -51,10 +42,9 @@ const SubTitle = styled.div`
 `;
 
 const MainTitle = styled.div`
-  font-family: "BMHANNA";
-  font-size: 6rem;
+  font-family: "Pretendard";
+  font-size: 4rem;
   line-height: 1.3;
-  margin-bottom: 1rem;
 `;
 
 const Description = styled.div`
@@ -62,20 +52,12 @@ const Description = styled.div`
   font-size: 1rem;
   line-height: 1.5;
   color: #ccc;
-`;
-
-const Footer = styled.footer`
-  font-family: "Pretendard";
-  font-size: 1rem;
-  color: #d9d9d9;
-  position: absolute;
-  bottom: 20px;
-  left: 68px;
+  margin-bottom: 30px;
 `;
 
 export default function MainPage() {
   return (
-    <Wrapper>
+    <div>
       <FirstSection>
         <TitleBlock>
           <div>INTERACTIVE</div>
@@ -105,6 +87,6 @@ export default function MainPage() {
           비용 없는 커뮤니티 플랫폼을 만들었습니다.
         </Description>
       </SecondSection>
-    </Wrapper>
+    </div>
   );
 }
