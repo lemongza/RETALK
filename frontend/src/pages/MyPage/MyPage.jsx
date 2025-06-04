@@ -416,7 +416,10 @@ export default function MyPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const token = localStorage.getItem("token");
-
+  useEffect(() => {
+    //스크롤바 상단으로 초기화
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     if (!token) {
       alert("로그인 후 이용해주세요.");

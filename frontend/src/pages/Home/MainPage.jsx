@@ -1,5 +1,4 @@
 // src/pages/Home/MainPage.jsx
-import React from "react";
 import styled from "styled-components";
 
 const FirstSection = styled.section`
@@ -54,10 +53,13 @@ const Description = styled.div`
   font-size: 1rem;
   line-height: 1.5;
   color: #ccc;
-  margin-bottom: 30px;
 `;
 
 export default function MainPage() {
+  useEffect(() => {
+    //스크롤바 상단으로 초기화
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div>
       <FirstSection>
