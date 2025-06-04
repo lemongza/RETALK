@@ -103,8 +103,11 @@ const AddButton = styled.button`
 export default function ReadPage() {
   const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
+  const currentUserNickname = localStorage.getItem('nickname');
 
   useEffect(() => {
+    console.log('✅ 현재 사용자 닉네임:', currentUserNickname);
+
     const fetchReviews = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -113,13 +116,15 @@ export default function ReadPage() {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log('📦 불러온 리뷰:', res.data);
         setReviews(res.data);
       } catch (err) {
-        console.error(err);
+        console.error('리뷰 불러오기 실패:', err);
       }
     };
+
     fetchReviews();
-  }, []);
+  }, [currentUserNickname]);
 
   const goToWritePage = () => {
     navigate('/read/write');
@@ -140,7 +145,7 @@ export default function ReadPage() {
         });
         setReviews(reviews.filter((review) => review.reviewId !== reviewId));
       } catch (err) {
-        console.error(err);
+        console.error('리뷰 삭제 실패:', err);
       }
     }
   };
@@ -151,25 +156,36 @@ export default function ReadPage() {
         <div style={{ color: 'white', textAlign: 'center' }}>아직 작성된 리뷰가 없습니다.</div>
       ) : (
         <CardWrapper>
-          {reviews.map((review) => (
-            <ReviewCard key={review.reviewId}>
-              <Header>
-                <span>{review.reviewerNickname}</span>
-                <ButtonGroup>
-                  <ActionButton variant="edit" onClick={() => handleEdit(review.reviewId)}>수정</ActionButton>
-                  <ActionButton variant="delete" onClick={() => handleDelete(review.reviewId)}>삭제</ActionButton>
-                </ButtonGroup>
-              </Header>
-              <BookInfo>
-                <BookCover src={review.bookCoverUrl} alt={review.bookTitle} />
-                <BookDetails>
-                  <BookTitle>{review.bookTitle}</BookTitle>
-                  <BookAuthor>{review.bookAuthor}</BookAuthor>
-                </BookDetails>
-              </BookInfo>
-              <Message>"{review.message}"</Message>
-            </ReviewCard>
-          ))}
+          {reviews.map((review) => {
+            console.log('👤 리뷰 작성자:', review.reviewerNickname);
+            console.log('🧑 현재 사용자:', currentUserNickname);
+
+            return (
+              <ReviewCard key={review.reviewId}>
+                <Header>
+                  <span>{review.reviewerNickname}</span>
+                  {review.reviewerNickname === currentUserNickname && (
+                    <ButtonGroup>
+                      <ActionButton variant="edit" onClick={() => handleEdit(review.reviewId)}>
+                        수정
+                      </ActionButton>
+                      <ActionButton variant="delete" onClick={() => handleDelete(review.reviewId)}>
+                        삭제
+                      </ActionButton>
+                    </ButtonGroup>
+                  )}
+                </Header>
+                <BookInfo>
+                  <BookCover src={review.bookCoverUrl} alt={review.bookTitle} />
+                  <BookDetails>
+                    <BookTitle>{review.bookTitle}</BookTitle>
+                    <BookAuthor>{review.bookAuthor}</BookAuthor>
+                  </BookDetails>
+                </BookInfo>
+                <Message>"{review.message}"</Message>
+              </ReviewCard>
+            );
+          })}
         </CardWrapper>
       )}
       <AddButton onClick={goToWritePage}>+</AddButton>
