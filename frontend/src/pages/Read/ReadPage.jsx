@@ -1,65 +1,178 @@
-// src/pages/Read/ReadPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const PageWrapper = styled.div`
-  padding-top: 100px; /* 헤더 높이만큼 패딩 */
-  padding-bottom: 100px;
-  min-height: 100vh;
+const Container = styled.div`
+  padding: 120px 5vw 5vw;
   background: #052210;
-  color: white;
-  font-family: 'Pretendard';
+  min-height: 100vh;
+  position: relative;
 `;
 
-const EmptyMessage = styled.div`
-  text-align: center;
-  font-size: 1.2rem;
-  margin-top: 20vh;
-  color: #ccc;
+const CardWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+`;
+
+const ReviewCard = styled.div`
+  background: #fff;
+  color: #000;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 360px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+  color: #333;
+`;
+
+const BookInfo = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+`;
+
+const BookCover = styled.img`
+  width: 100px;
+  height: auto;
+  border-radius: 5px;
+`;
+
+const BookDetails = styled.div`
+  flex: 1;
+`;
+
+const BookTitle = styled.h3`
+  margin: 0;
+  font-size: 1.1rem;
+`;
+
+const BookAuthor = styled.p`
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+  color: #555;
+`;
+
+const Message = styled.p`
+  margin-top: 0.8rem;
+  white-space: pre-wrap;
+  font-style: italic;
+  font-size: 0.95rem;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 0.4rem;
+`;
+
+const ActionButton = styled.button`
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: ${({ variant }) => (variant === 'edit' ? '#00C853' : '#D32F2F')};
+  color: #fff;
 `;
 
 const AddButton = styled.button`
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: 40px;
+  right: 40px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: white;
-  border: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  background: white;
   color: #00C853;
-  font-size: 2rem;
+  font-size: 2.4rem;
+  border: none;
   cursor: pointer;
-  transition: background 0.3s;
+  font-weight: bold;
   z-index: 20;
-
-  &:hover {
-    background-color: #e0e0e0;
-  }
 `;
 
 export default function ReadPage() {
   const [reviews, setReviews] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // TODO: fetch review data from API
-    // fetch('/api/books/review').then(res => res.json()).then(setReviews);
+    const fetchReviews = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get('/api/books/review', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setReviews(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchReviews();
   }, []);
 
-  const handleAddClick = () => {
-    alert("리뷰 작성 폼을 여는 기능을 구현하세요.");
+  const goToWritePage = () => {
+    navigate('/read/write');
+  };
+
+  const handleEdit = (reviewId) => {
+    navigate(`/read/edit/${reviewId}`);
+  };
+
+  const handleDelete = async (reviewId) => {
+    if (window.confirm('정말로 이 리뷰를 삭제하시겠습니까?')) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`/api/books/review/${reviewId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setReviews(reviews.filter((review) => review.reviewId !== reviewId));
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
   return (
-    <PageWrapper>
+    <Container>
       {reviews.length === 0 ? (
-        <EmptyMessage>아직 작성된 리뷰가 없습니다.</EmptyMessage>
+        <div style={{ color: 'white', textAlign: 'center' }}>아직 작성된 리뷰가 없습니다.</div>
       ) : (
-        <div> {/* TODO: 리뷰 목록 렌더링 */} </div>
+        <CardWrapper>
+          {reviews.map((review) => (
+            <ReviewCard key={review.reviewId}>
+              <Header>
+                <span>{review.reviewerNickname}</span>
+                <ButtonGroup>
+                  <ActionButton variant="edit" onClick={() => handleEdit(review.reviewId)}>수정</ActionButton>
+                  <ActionButton variant="delete" onClick={() => handleDelete(review.reviewId)}>삭제</ActionButton>
+                </ButtonGroup>
+              </Header>
+              <BookInfo>
+                <BookCover src={review.bookCoverUrl} alt={review.bookTitle} />
+                <BookDetails>
+                  <BookTitle>{review.bookTitle}</BookTitle>
+                  <BookAuthor>{review.bookAuthor}</BookAuthor>
+                </BookDetails>
+              </BookInfo>
+              <Message>"{review.message}"</Message>
+            </ReviewCard>
+          ))}
+        </CardWrapper>
       )}
-
-      <AddButton onClick={handleAddClick}>＋</AddButton>
-    </PageWrapper>
+      <AddButton onClick={goToWritePage}>+</AddButton>
+    </Container>
   );
 }
