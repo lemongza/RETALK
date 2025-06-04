@@ -1,7 +1,6 @@
 // src/pages/Home/MainPage.jsx
-import React from "react";
 import styled from "styled-components";
-import Banner from "../../components/layout/Header"; // ✅ Header 가져오기
+import { useEffect } from "react";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -64,16 +63,11 @@ const Description = styled.div`
   color: #ccc;
 `;
 
-const Footer = styled.footer`
-  font-family: "Pretendard";
-  font-size: 1rem;
-  color: #d9d9d9;
-  position: absolute;
-  bottom: 20px;
-  left: 68px;
-`;
-
 export default function MainPage() {
+  useEffect(() => {
+    //스크롤바 상단으로 초기화
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <Wrapper>
       <FirstSection>
