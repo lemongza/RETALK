@@ -159,10 +159,6 @@ const MetaInfo = styled.div`
   }
 `;
 
-localStorage.setItem(
-  "token",
-  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldW5qaUB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDkwMTE1NjYsImV4cCI6MTc0OTA5Nzk2Nn0.xmAMkYI-mHH6fO1q_5PqQlHo8PhvFuYf8t4xzyauN2Y"
-);
 export default function TalkBoard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("latest");

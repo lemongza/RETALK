@@ -61,6 +61,7 @@ const LoginButton = styled.div`
 
 export default function Banner() {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   const handleTalkClick = () => {
     navigate("/talk");
@@ -69,7 +70,13 @@ export default function Banner() {
     navigate("/mypage");
   };
   const handleLoginClick = () => {
-    navigate("/login");
+    if (token) {
+      localStorage.removeItem("token");
+      alert("로그아웃 되었습니다.");
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
   };
   const handleReadClick = () => {
     navigate("/read");
@@ -95,7 +102,7 @@ export default function Banner() {
             Mypage
           </NavItem>
           <LoginButton onClick={handleLoginClick} style={{ cursor: "pointer" }}>
-            Login
+            {token ? "Logout" : "Login"}
           </LoginButton>
         </NavGroup>
       </Header>

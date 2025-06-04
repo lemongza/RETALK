@@ -7,7 +7,7 @@ import WritePage from "../pages/Talk/WritePage";
 import DetailPage from "../pages/Talk/DetailPage";
 import Meeting from "../pages/Talk/Meeting";
 import Mypage from "../pages/MyPage/MyPage";
-import LoginPage from "../pages/MyPage/Loginpage";
+import LoginPage from "../pages/Login/LoginPage";
 import NotFound from "../pages/NotFound/NotFound";
 import Edit from "../pages/Talk/EditPage";
 
