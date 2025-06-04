@@ -112,10 +112,14 @@ export default function DetailPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  useEffect(() => {
+    //스크롤바 상단으로 초기화
+    window.scrollTo(0, 0);
+  }, []);
+  const token = localStorage.getItem("token");
 
   const handleJoin = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
       if (!token) {
         alert("로그인이 필요한 서비스입니다.");
         return;
@@ -123,15 +127,11 @@ export default function DetailPage() {
       console.log("보내는 요청 ID:", post.id);
       console.log("보내는 토큰:", token);
 
-      const response = await axios.post(
-        `/meetings/${post.id}/join`,
-        // POST body 없음
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
+      const response = await axios.post(`/meetings/${post.id}/join`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert("참여 요청이 성공적으로 전송되었습니다!");
       setShowConfirm(false);
     } catch (error) {
@@ -171,8 +171,7 @@ export default function DetailPage() {
 
         const response = await axios.get(`/meetings/${id}`, {
           headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldW5qaUB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzQ4NzAzMDcxLCJleHAiOjE3NDg3ODk0NzF9.4rOaZ_ajs3DOl-CuLKF5qSD-t7hvRakQE3kUqQCuB5o",
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -197,22 +196,13 @@ export default function DetailPage() {
     fetchPost();
   }, [id, navigate]);
 
-  //로컬스토리지에 토큰 저장
-  useEffect(() => {
-    localStorage.setItem(
-      "accessToken",
-      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldW5qaUB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzQ4NzAzMDcxLCJleHAiOjE3NDg3ODk0NzF9.4rOaZ_ajs3DOl-CuLKF5qSD-t7hvRakQE3kUqQCuB5o"
-    );
-  }, []);
-
   // 현재 로그인한 사용자 ID 추출 함수
   function getUserIdFromToken() {
-    const token = localStorage.getItem("accessToken");
     if (!token) return null;
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       console.log("payload:", payload);
-      return payload._use;
+      return payload.sub;
     } catch {
       return null;
     }
@@ -316,10 +306,12 @@ export default function DetailPage() {
 
       <div>
         {console.log("post 정보 : ", post)}
-        {console.log("hostId", post?.hostId)}
-        {post && userId && parseInt(userId) === post.hostId ? (
+        {console.log("hostId", post?.hostEmail)}
+        {post && userId && userId === post.hostEmail ? (
           <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem" }}>
-            <HalfButton onClick={() => navigate(`/talk/edit/${post.id}`)}>
+            <HalfButton
+              onClick={() => navigate(`/talk/meeting/edit/${post.id}`)}
+            >
               수정하기
             </HalfButton>
             <HalfRedButton
@@ -328,8 +320,7 @@ export default function DetailPage() {
                   try {
                     await axios.delete(`/meetings/${post.id}`, {
                       headers: {
-                        Authorization:
-                          "Bearer " + localStorage.getItem("accessToken"),
+                        Authorization: `Bearer ${token}`,
                       },
                     });
                     alert("삭제되었습니다.");

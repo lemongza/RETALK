@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "../../api/axioInstance";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -32,33 +33,27 @@ const ProfileSection = styled.div`
   color: white;
 `;
 
-const ProfileImage = styled.div`
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  margin: 0 auto 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  color: #00c853;
-`;
-
 const ProfileInfo = styled.div`
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+  padding-top: 1rem;
 `;
 
 const UserName = styled.h2`
   font-size: 1.5rem;
-  margin-bottom: 0.5rem;
   color: #00c853;
+  margin: 0;
 `;
 
 const UserEmail = styled.p`
   color: #c4c4c4;
   font-size: 1rem;
-  margin-bottom: 1.5rem;
+  margin: 0;
 `;
 
 const StatsContainer = styled.div`
@@ -69,16 +64,20 @@ const StatsContainer = styled.div`
 `;
 
 const StatBox = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.2);
   padding: 1rem;
   border-radius: 8px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 `;
 
 const StatNumber = styled.div`
   font-size: 1.5rem;
   color: #00c853;
-  margin-bottom: 0.5rem;
+  //margin-bottom: 0.5rem;
 `;
 
 const StatLabel = styled.div`
@@ -94,7 +93,7 @@ const ContentSection = styled.div`
 `;
 
 const Section = styled.div`
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 1.5rem;
 `;
@@ -112,14 +111,14 @@ const MeetingList = styled.div`
 `;
 
 const MeetingItem = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.2);
   padding: 1rem;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
   }
 `;
 
@@ -199,21 +198,23 @@ const Modal = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+  will-change: transform;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;
 `;
 
 const ModalContent = styled.div`
-  background: #1a1a1a;
-  padding: 2rem;
+  background-color: #222;
+  padding: 3rem;
   border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-  max-height: 80vh;
-  overflow-y: auto;
+  text-align: center;
+  color: white;
+  min-width: 300px;
+  width: 20%;
+  z-index: 9999;
 `;
 
 const ModalHeader = styled.div`
@@ -292,170 +293,221 @@ const ActionButton = styled.button`
   }
 `;
 
-export default function MyPage() {
-  const [userData, setUserData] = useState({
-    name: "김독서",
-    email: "reader@example.com",
-    profileImage: null,
-    stats: {
-      totalMeetings: 15,
-      activeMeetings: 3,
-      booksRead: 12,
-      reviews: 8,
-    },
-    meetings: {
-      hosting: [
-        {
-          id: 1,
-          title: "해리포터 독서모임",
-          bookTitle: "해리포터와 마법사의 돌",
-          members: 5,
-          maxMembers: 8,
-          nextMeeting: "2024-03-25",
-          joinRequests: [
-            { id: 1, userId: 101, name: "신청자1", email: "user1@example.com" },
-            { id: 2, userId: 102, name: "신청자2", email: "user2@example.com" },
-          ],
-        },
-        {
-          id: 2,
-          title: "소설 읽기 모임",
-          bookTitle: "데미안",
-          members: 4,
-          maxMembers: 6,
-          nextMeeting: "2024-03-27",
-          joinRequests: [],
-        },
-      ],
-      participating: [
-        {
-          id: 3,
-          title: "철학 독서모임",
-          bookTitle: "소크라테스의 변명",
-          members: 6,
-          maxMembers: 8,
-          nextMeeting: "2024-03-26",
-        },
-      ],
-    },
-    books: [
-      {
-        id: 1,
-        title: "해리포터와 마법사의 돌",
-        cover: "https://example.com/book1.jpg",
-      },
-      {
-        id: 2,
-        title: "데미안",
-        cover: "https://example.com/book2.jpg",
-      },
-      {
-        id: 3,
-        title: "소크라테스의 변명",
-        cover: "https://example.com/book3.jpg",
-      },
-    ],
-  });
+const ManageButton = styled.button`
+  background: rgba(0, 200, 83, 0.1);
+  color: #00c853;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
-  const [selectedMeeting, setSelectedMeeting] = useState(null);
+  &:hover {
+    background: rgba(0, 200, 83, 0.2);
+  }
+`;
+
+const ManageModalContent = styled(ModalContent)`
+  //background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 0;
+  max-width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+
+  .manage-options {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .manage-option {
+    padding: 1rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .badge {
+      background: #00c853;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .meeting-title {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .meeting-date {
+    color: #c4c4c4;
+    font-size: 0.9rem;
+  }
+`;
+
+export default function MyPage() {
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
+  const [meetings, setMeetings] = useState([]);
   const [showRequestsModal, setShowRequestsModal] = useState(false);
+  const [selectedMeeting, setSelectedMeeting] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showManageModal, setShowManageModal] = useState(false);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-          throw new Error("로그인이 필요합니다.");
-        }
-
-        // const response = await axios.get("/users/me", {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // });
-        // setUserData(response.data);
-      } catch (error) {
-        console.error("사용자 데이터 가져오기 실패:", error);
-        if (error.message === "로그인이 필요합니다.") {
-          alert("로그인이 필요한 서비스입니다.");
-          // navigate('/login');
-        }
-      }
-    };
-
+    if (!token) {
+      alert("로그인 후 이용해주세요.");
+      navigate("/login");
+      return;
+    }
     fetchUserData();
   }, []);
 
-  const handleRespondToJoin = async (meetingId, userId, approve) => {
+  const fetchUserData = async () => {
     try {
-      await axios.post(`/meetings/${meetingId}/respond`, null, {
-        params: {
-          userId,
-          approve,
-        },
+      setLoading(true);
+      const response = await axios.get("/users/me", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
+      setUserData(response.data);
+      console.log(response.data);
 
-      // 성공적으로 처리되면 UI 업데이트
-      setUserData((prev) => ({
-        ...prev,
-        meetings: {
-          ...prev.meetings,
-          hosting: prev.meetings.hosting.map((meeting) => {
-            if (meeting.id === meetingId) {
-              return {
-                ...meeting,
-                joinRequests: meeting.joinRequests.filter(
-                  (request) => request.userId !== userId
-                ),
-                members: approve ? meeting.members + 1 : meeting.members,
-              };
-            }
-            return meeting;
-          }),
-        },
+      // 사용자의 모임 정보 가져오기 (호스트 모임과 참여 모임 각각 조회)
+      const [hostedResponse, joinedResponse] = await Promise.all([
+        axios.get("/users/me/hosted", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        axios.get("/users/me/meetings/joined", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
+
+      // 호스트 모임과 참여 모임 데이터 합치기
+      const hostedMeetings = hostedResponse.data.map((meeting) => ({
+        ...meeting,
+        isHost: true,
       }));
-
-      alert(approve ? "참여를 승인했습니다." : "참여를 거절했습니다.");
+      const joinedMeetings = joinedResponse.data.map((meeting) => ({
+        ...meeting,
+        isHost: false,
+      }));
+      setMeetings([...hostedMeetings, ...joinedMeetings]);
     } catch (error) {
-      console.error("참여 신청 응답 실패:", error);
-      alert("처리 중 오류가 발생했습니다.");
+      console.error("사용자 정보 로딩 실패:", error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        alert("로그인이 필요합니다.");
+        navigate("/login");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
-  const openRequestsModal = (meeting) => {
-    setSelectedMeeting(meeting);
-    setShowRequestsModal(true);
+  const handleRespondToJoin = async (meetingId, userId, approve) => {
+    try {
+      await axios.post(
+        `/meetings/${meetingId}/respond?userId=${userId}&approve=${approve}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // 요청 처리 후 데이터 새로고침
+      fetchUserData();
+      alert(
+        approve ? "참여 요청을 승인했습니다." : "참여 요청을 거절했습니다."
+      );
+    } catch (error) {
+      console.error("요청 처리 실패:", error);
+      if (error.response?.status === 403) {
+        alert("호스트만 참여 요청을 처리할 수 있습니다.");
+      } else {
+        alert("요청 처리에 실패했습니다.");
+      }
+    }
   };
+
+  //모집 마감
+  const handleCloseRecruitment = async (meetingId) => {
+    try {
+      await axios.patch(
+        `/meetings/${meetingId}/status?active=${!selectedMeeting.active}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("모집 상태가 변경되었습니다.");
+      fetchUserData();
+      setShowManageModal(false);
+    } catch (error) {
+      console.error("모집 마감 실패:", error);
+      alert("모집 마감에 실패했습니다.");
+    }
+  };
+
+  if (loading) {
+    return <Container>로딩 중...</Container>;
+  }
+
+  // 호스트 모임과 참여 모임 개수 계산
+  const hostedCount = meetings.filter((m) => m.isHost).length;
+  const joinedCount = meetings.filter((m) => !m.isHost).length;
 
   return (
     <Container>
       <MainContent>
         <ProfileSection>
-          <ProfileImage>
-            {userData.profileImage ? (
-              <img src={userData.profileImage} alt="프로필" />
-            ) : (
-              "📚"
-            )}
-          </ProfileImage>
+          {/* <ProfileImage>{userData?.name?.charAt(0) || "U"}</ProfileImage> */}
           <ProfileInfo>
-            <UserName>{userData.name}</UserName>
-            <UserEmail>{userData.email}</UserEmail>
+            <UserName>{userData?.name || "사용자"}</UserName>
+            <UserEmail>{userData?.email || ""}</UserEmail>
           </ProfileInfo>
           <StatsContainer>
             <StatBox>
-              <StatNumber>{userData.stats.totalMeetings}</StatNumber>
-              <StatLabel>전체 모임</StatLabel>
+              <StatNumber>{hostedCount}</StatNumber>
+              <StatLabel>주최한 모임</StatLabel>
             </StatBox>
             <StatBox>
-              <StatNumber>{userData.stats.activeMeetings}</StatNumber>
-              <StatLabel>진행중인 모임</StatLabel>
+              <StatNumber>{joinedCount}</StatNumber>
+              <StatLabel>참여 모임</StatLabel>
             </StatBox>
-            여기에 개인정보 보여주고 수정 만들거에염
-    
           </StatsContainer>
         </ProfileSection>
 
@@ -463,77 +515,132 @@ export default function MyPage() {
           <Section>
             <SectionTitle>내가 주최하는 모임</SectionTitle>
             <MeetingList>
-              {userData.meetings.hosting.map((meeting) => (
-                <MeetingItem key={meeting.id}>
-                  <div>
+              {meetings
+                .filter((m) => m.isHost)
+                .map((meeting) => (
+                  <MeetingItem key={meeting.id}>
+                    <div
+                      onClick={() => navigate(`/talk/meeting/${meeting.id}`)}
+                    >
+                      <MeetingTitle>{meeting.title}</MeetingTitle>
+                      <div
+                        style={{
+                          color: meeting.active ? "#00C853" : "#FF4444",
+                          fontSize: "0.9rem",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
+                        {meeting.active ? "모집중" : "모집마감"}
+                      </div>
+                      <MeetingInfo>
+                        <span>{meeting.bookTitle}</span>
+                        <span>{meeting.startDate?.slice(0, 10)}</span>
+                      </MeetingInfo>
+                    </div>
+                    <ManageButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedMeeting(meeting);
+                        setShowManageModal(true);
+                      }}
+                    >
+                      관리
+                      {meeting.pendingRequests > 0 && (
+                        <RequestBadge>{meeting.pendingRequests}</RequestBadge>
+                      )}
+                    </ManageButton>
+                  </MeetingItem>
+                ))}
+            </MeetingList>
+          </Section>
+
+          <Section>
+            <SectionTitle>참여 중인 모임</SectionTitle>
+            <MeetingList>
+              {meetings
+                .filter((m) => !m.isHost)
+                .map((meeting) => (
+                  <MeetingItem
+                    key={meeting.id}
+                    onClick={() => navigate(`/talk/meeting/${meeting.id}`)}
+                  >
                     <MeetingTitle>{meeting.title}</MeetingTitle>
                     <MeetingInfo>
                       <span>{meeting.bookTitle}</span>
-                      <span>
-                        {meeting.members}/{meeting.maxMembers}명 · 다음 모임:{" "}
-                        {meeting.nextMeeting}
-                      </span>
+                      <span>{meeting.startDate?.slice(0, 10)}</span>
                     </MeetingInfo>
-                  </div>
-                  {meeting.joinRequests.length > 0 && (
-                    <JoinRequestsButton
-                      onClick={() => openRequestsModal(meeting)}
-                    >
-                      참여 신청
-                      <RequestBadge>{meeting.joinRequests.length}</RequestBadge>
-                    </JoinRequestsButton>
-                  )}
-                </MeetingItem>
-              ))}
+                  </MeetingItem>
+                ))}
             </MeetingList>
-          </Section>
-
-          <Section>
-            <SectionTitle>참여중인 모임</SectionTitle>
-            <MeetingList>
-              {userData.meetings.participating.map((meeting) => (
-                <MeetingItem key={meeting.id}>
-                  <MeetingTitle>{meeting.title}</MeetingTitle>
-                  <MeetingInfo>
-                    <span>{meeting.bookTitle}</span>
-                    <span>
-                      {meeting.members}/{meeting.maxMembers}명 · 다음 모임:{" "}
-                      {meeting.nextMeeting}
-                    </span>
-                  </MeetingInfo>
-                </MeetingItem>
-              ))}
-            </MeetingList>
-          </Section>
-
-          <Section>
-            <SectionTitle>읽은 책</SectionTitle>
-            <BookList>Read페이지에 선택한 것 추가할 예정</BookList>
           </Section>
         </ContentSection>
       </MainContent>
+
+      {showManageModal && selectedMeeting && (
+        <Modal onClick={() => setShowManageModal(false)}>
+          <ManageModalContent onClick={(e) => e.stopPropagation()}>
+            <div className="meeting-title">
+              <span>{selectedMeeting.title}</span>
+              <span className="meeting-date">
+                {selectedMeeting.startDate?.slice(0, 10)}
+              </span>
+            </div>
+
+            <div className="manage-options">
+              <div
+                className="manage-option"
+                onClick={() => {
+                  setShowManageModal(false);
+                  setShowRequestsModal(true);
+                }}
+              >
+                <span>참여 신청 관리</span>
+                {selectedMeeting.pendingRequests > 0 && (
+                  <span className="badge">
+                    {selectedMeeting.pendingRequests}
+                  </span>
+                )}
+              </div>
+
+              <div
+                className="manage-option"
+                onClick={() => {
+                  const confirmMessage = selectedMeeting.active
+                    ? "모집을 마감하시겠습니까?"
+                    : "모집을 다시 여시겠습니까?";
+                  if (window.confirm(confirmMessage)) {
+                    handleCloseRecruitment(
+                      selectedMeeting.id,
+                      !selectedMeeting.active
+                    );
+                  }
+                }}
+                style={{
+                  color: selectedMeeting.active ? "#FF4444" : "#00C853",
+                }}
+              >
+                {selectedMeeting.active ? "모집 마감" : "모집중으로 열기"}
+              </div>
+            </div>
+          </ManageModalContent>
+        </Modal>
+      )}
 
       {showRequestsModal && selectedMeeting && (
         <Modal onClick={() => setShowRequestsModal(false)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
             <ModalHeader>
-              <ModalTitle>{selectedMeeting.title} - 참여 신청 목록</ModalTitle>
+              <ModalTitle>참여 요청 목록</ModalTitle>
               <CloseButton onClick={() => setShowRequestsModal(false)}>
                 ×
               </CloseButton>
             </ModalHeader>
             <RequestList>
-              {selectedMeeting.joinRequests.map((request) => (
-                <RequestItem key={request.id}>
-                  <RequestInfo>
-                    <div>{request.name}</div>
-                    <div style={{ color: "#c4c4c4", fontSize: "0.9rem" }}>
-                      {request.email}
-                    </div>
-                  </RequestInfo>
-                  <RequestActions>
-                    <ActionButton
-                      className="approve"
+              {selectedMeeting.joinRequests?.map((request) => (
+                <MeetingItem key={request.id}>
+                  <MeetingTitle>{request.userEmail}</MeetingTitle>
+                  <MeetingInfo>
+                    <button
                       onClick={() =>
                         handleRespondToJoin(
                           selectedMeeting.id,
@@ -541,11 +648,26 @@ export default function MyPage() {
                           true
                         )
                       }
+                      style={{
+                        color: "#00C853",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "8px 16px",
+                        borderRadius: "4px",
+                        transition: "background-color 0.2s",
+                      }}
+                      onMouseOver={(e) =>
+                        (e.target.style.backgroundColor =
+                          "rgba(0, 200, 83, 0.1)")
+                      }
+                      onMouseOut={(e) =>
+                        (e.target.style.backgroundColor = "transparent")
+                      }
                     >
                       승인
-                    </ActionButton>
-                    <ActionButton
-                      className="reject"
+                    </button>
+                    <button
                       onClick={() =>
                         handleRespondToJoin(
                           selectedMeeting.id,
@@ -553,21 +675,39 @@ export default function MyPage() {
                           false
                         )
                       }
+                      style={{
+                        color: "#FF4444",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "8px 16px",
+                        borderRadius: "4px",
+                        transition: "background-color 0.2s",
+                      }}
+                      onMouseOver={(e) =>
+                        (e.target.style.backgroundColor =
+                          "rgba(255, 68, 68, 0.1)")
+                      }
+                      onMouseOut={(e) =>
+                        (e.target.style.backgroundColor = "transparent")
+                      }
                     >
                       거절
-                    </ActionButton>
-                  </RequestActions>
-                </RequestItem>
+                    </button>
+                  </MeetingInfo>
+                </MeetingItem>
               ))}
-              {selectedMeeting.joinRequests.length === 0 && (
+              {(!selectedMeeting.joinRequests ||
+                selectedMeeting.joinRequests.length === 0) && (
                 <div
                   style={{
                     color: "#c4c4c4",
                     textAlign: "center",
-                    padding: "1rem",
+                    padding: "2rem",
+                    fontSize: "0.9rem",
                   }}
                 >
-                  새로운 참여 신청이 없습니다.
+                  새로운 참여 요청이 없습니다.
                 </div>
               )}
             </RequestList>

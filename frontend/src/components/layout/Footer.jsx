@@ -4,12 +4,12 @@ const Footer = styled.div`
   transform: translateY(88px);
   max-width: 1200px;
   width: 100%;
-  height: 109px;
+  height: 120px;
   display: flex;
   border-top: 2px solid #bbbbbb;
   flex-direction: column;
   align-items: start;
-  margin: 0 auto;
+  margin: 40px auto 0 auto;
   padding: 30px;
   box-sizing: border-box;
 `;

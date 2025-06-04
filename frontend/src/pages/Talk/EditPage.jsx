@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../api/axioInstance";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 
 const Container = styled.div`
@@ -157,9 +157,16 @@ const Button = styled.button`
   }
 `;
 
-export default function WritePage() {
+export default function EditPage() {
   console.log("WritePage loaded");
   const navigate = useNavigate();
+  const { id } = useParams();
+  useEffect(() => {
+    //스크롤바 상단으로 초기화
+    window.scrollTo(0, 0);
+  }, []);
+  const token = localStorage.getItem("token");
+
   const [formData, setFormData] = useState({
     title: "",
     bookTitle: "",
@@ -170,11 +177,39 @@ export default function WritePage() {
     maxMembers: "",
     content: "",
   });
-  const token = localStorage.getItem("token");
+
   useEffect(() => {
-    //스크롤바 상단으로 초기화
-    window.scrollTo(0, 0);
-  }, []);
+    if (id) {
+      const fetchMeeting = async () => {
+        try {
+          const response = await axios.get(`/meetings/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const data = response.data;
+          setFormData({
+            title: data.title,
+            bookTitle: data.bookTitle,
+            bookAuthor: data.bookAuthor,
+            bookCategory: data.bookCategory,
+            bookCover: data.bookCover,
+            startDate: data.startDate?.split("T")[0] || "",
+            maxMembers: data.maxMembers.toString(),
+            description: data.description,
+          });
+        } catch (error) {
+          console.error(
+            "모임 정보 불러오기 실패:",
+            error.response?.data || error.message
+          );
+        }
+      };
+
+      fetchMeeting();
+    }
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -186,32 +221,38 @@ export default function WritePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formattedStartDate = formData.startDate
+      ? formData.startDate + "T00:00:00"
+      : null;
+
+    const payload = {
+      ...formData,
+      startDate: formattedStartDate,
+      maxMembers: parseInt(formData.maxMembers),
+      description: formData.description,
+      active: true,
+    };
 
     try {
-      // startDate를 LocalDateTime 형식으로 변환
-      const formattedStartDate = formData.startDate
-        ? formData.startDate + "T00:00:00"
-        : null;
-
-      const response = await axios.post(
-        "/meetings",
-        {
-          ...formData,
-          startDate: formattedStartDate,
-          maxMembers: parseInt(formData.maxMembers),
-          isActive: true,
-        },
-        {
+      let response;
+      if (id) {
+        response = await axios.put(`/meetings/${id}`, payload, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+        });
+      } else {
+        response = await axios.post(`/meetings`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
 
-      console.log("모임 생성 성공:", response.data);
-      navigate("/talk"); // TalkBoardPage로 이동
+      console.log("모임 저장 성공:", response.data);
+      navigate("/talk");
     } catch (error) {
-      console.error("모임 생성 실패:", error.response?.data || error.message);
+      console.error("모임 저장 실패:", error.response?.data || error.message);
     }
   };
 
@@ -334,6 +375,7 @@ export default function WritePage() {
           <InputGroup>
             <Label>모임 소개</Label>
             <TextArea
+              type="text"
               name="description"
               value={formData.description}
               onChange={handleChange}
@@ -343,7 +385,7 @@ export default function WritePage() {
           </InputGroup>
 
           <Button type="submit" onClick={handleSubmit}>
-            등록하기
+            수정하기
           </Button>
         </Form>
       </Container>

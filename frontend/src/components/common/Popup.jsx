@@ -3,15 +3,17 @@ import styled from "styled-components";
 
 const Overlay = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  //background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  will-change: transform;
+  display: fixed;
   justify-content: center;
   align-items: center;
-  z-index: 999;
-  border-radius: 16px;
+  z-index: 9999;
 `;
 
 const PopupBox = styled.div`
@@ -20,6 +22,11 @@ const PopupBox = styled.div`
   border-radius: 8px;
   text-align: center;
   color: white;
+  min-width: 300px;
+  //transform: translateY(-50%);
+  position: relative;
+  top: 50%;
+  width: 20%;
 `;
 
 const ButtonGroup = styled.div`

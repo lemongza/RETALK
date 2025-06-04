@@ -6,7 +6,6 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 
-
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -571,6 +570,7 @@ export default function Meeting() {
   const [activeTab, setActiveTab] = useState("book");
   const [isHost, setIsHost] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const token = localStorage.getItem("token");
   const [todos, setTodos] = useState([
     { id: 1, text: "1장 읽기", completed: false },
     { id: 2, text: "중요 문구 메모하기", completed: true },
@@ -646,18 +646,15 @@ export default function Meeting() {
   useEffect(() => {
     const fetchMeetingData = async () => {
       try {
-        const token =
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldW5qaUB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzQ4NzI0NDY1LCJleHAiOjE3NDg4MTA4NjV9.3GPN4j47XW9C_I1kZFrBsRIkZD09Z6xmd8l5mANliMo";
-
         // 토큰에서 사용자 정보 추출
         const tokenData = parseJwt(token);
-        if (tokenData) {
+        if (token) {
           setUserEmail(tokenData.sub);
         }
 
         const response = await axios.get(`/meetings/${id}`, {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -746,7 +743,6 @@ export default function Meeting() {
 
   const handleSetEndDate = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
       if (!token) {
         throw new Error("로그인이 필요합니다.");
       }
@@ -879,7 +875,8 @@ export default function Meeting() {
           <Sidebar visible={activeTab === "members"}>
             <MemberList>
               <MemberTitle>
-                참여자 목록 ({meetingData.participant}/{meetingData.maxMembers})
+                참여자 목록 ({meetingData.participants?.length || 0}/
+                {meetingData.maxMembers})
               </MemberTitle>
               <Member className="host">
                 <MemberName isHost={true}>{meetingData.hostName}</MemberName>

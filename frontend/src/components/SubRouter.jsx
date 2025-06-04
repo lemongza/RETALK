@@ -9,6 +9,7 @@ import Meeting from "../pages/Talk/Meeting";
 import Mypage from "../pages/MyPage/MyPage";
 import LoginPage from "../pages/MyPage/Loginpage";
 import NotFound from "../pages/NotFound/NotFound";
+import Edit from "../pages/Talk/EditPage";
 
 export default function SubRouter() {
   return (
@@ -22,6 +23,7 @@ export default function SubRouter() {
           <Route path="/talk/write" element={<WritePage />}></Route>
           <Route path="/talk/:id" element={<DetailPage />} />
           <Route path="/talk/meeting/:id" element={<Meeting />} />
+          <Route path="/talk/meeting/edit/:id" element={<Edit />} />
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>

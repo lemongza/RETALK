@@ -159,19 +159,28 @@ const MetaInfo = styled.div`
   }
 `;
 
+localStorage.setItem(
+  "token",
+  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldW5qaUB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDkwMTE1NjYsImV4cCI6MTc0OTA5Nzk2Nn0.xmAMkYI-mHH6fO1q_5PqQlHo8PhvFuYf8t4xzyauN2Y"
+);
 export default function TalkBoard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("latest");
   const [posts, setPosts] = useState([]);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    //스크롤바 상단으로 초기화
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get("/meetings", {
           headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldW5qaUB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzQ4NzAzMDcxLCJleHAiOjE3NDg3ODk0NzF9.4rOaZ_ajs3DOl-CuLKF5qSD-t7hvRakQE3kUqQCuB5o",
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -196,7 +205,7 @@ export default function TalkBoard() {
   const filteredPosts = posts.filter(
     (post) =>
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.author.toLowerCase().includes(searchTerm.toLowerCase())
+      post.bookTitle?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // 정렬 기능
@@ -234,24 +243,28 @@ export default function TalkBoard() {
           </SearchGroup>
         </SearchContainer>
 
-        <BoardList style={{ cursor: "default", }}>
-        
-
+        <BoardList style={{ cursor: "default" }}>
           {sortedPosts.map((post) => {
             return (
               <BoardItem
-              key={post.id}
-              onClick={() => navigate(`/talk/${post.id}`)}
+                key={post.id}
+                onClick={() => navigate(`/talk/${post.id}`)}
               >
-              <span style={{ width: 60, textAlign: "center", color: post.active ? "#00e676" : "#ff5252" }}>
-                {post.active ? "모집중" : "마감"}
-              </span>
-              <Title>{post.title}</Title>
-              <MetaInfo>
-                <span>{post.bookTitle}</span>
-                <span>{post.bookAuthor}</span>
-                <span>{post.startDate?.split("T")[0]}</span>
-              </MetaInfo>
+                <span
+                  style={{
+                    width: 60,
+                    textAlign: "center",
+                    color: post.active ? "#00e676" : "#ff5252",
+                  }}
+                >
+                  {post.active ? "모집중" : "마감"}
+                </span>
+                <Title>{post.title}</Title>
+                <MetaInfo>
+                  <span>{post.bookTitle}</span>
+                  <span>{post.bookAuthor}</span>
+                  <span>{post.startDate?.split("T")[0]}</span>
+                </MetaInfo>
               </BoardItem>
             );
           })}
