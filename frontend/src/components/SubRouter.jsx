@@ -18,7 +18,7 @@ export default function SubRouter() {
       <main className="main-container">
         <Routes>
           <Route path="/" element={<MainPage />}></Route>
-          <Route path="*" element={<NotFound />} />
+          {/* <Route path="*" element={<NotFound />} /> */}
           <Route path="/talk" element={<TalkBoard />}></Route>
           <Route path="/talk/write" element={<WritePage />}></Route>
           <Route path="/talk/:id" element={<DetailPage />} />

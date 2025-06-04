@@ -5,7 +5,7 @@ import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
   return (
-    <BrowserRouter basename="/retalk">
+    <BrowserRouter basename="/">
       <Routes>
         <Route path="/*" element={<SubRouter />} />
         <Route path="/not-found" element={<NotFound />} />
