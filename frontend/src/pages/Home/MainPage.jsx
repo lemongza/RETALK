@@ -3,11 +3,13 @@ import React from "react";
 import styled from "styled-components";
 
 const FirstSection = styled.section`
-  height: 100vh;
+  height: 70vh;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 0 10vw;
+  padding-right: 10vw;
+  padding-left: 10vw;
+  padding-top: 5vh;
 `;
 
 const TitleBlock = styled.div`
@@ -16,7 +18,7 @@ const TitleBlock = styled.div`
   font-family: "Luckiest Guy";
   font-size: 6vw;
   line-height: 1.2;
-  margin-bottom: 20vh;
+  margin-bottom: 8vh; /* Reduce bottom margin */
 `;
 
 const Highlight = styled.span`
@@ -24,14 +26,14 @@ const Highlight = styled.span`
 `;
 
 const SecondSection = styled.section`
-  height: 100vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   text-align: center;
-  padding: 0 10vw;
   color: white;
+  padding-bottom: 10vh; /* Remove extra margin if any */
 `;
 
 const SubTitle = styled.div`
