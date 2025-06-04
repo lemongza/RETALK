@@ -17,18 +17,18 @@ const Header = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  height: 88px;
+  height: 70px;
   //width: 100vw;
   max-width: 1200px;
   margin: 0 auto;
-  border-bottom: 2px solid #bbbbbb;
+  //border-bottom: 2px solid #bbbbbb;
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
   line-height: 80px;
   background: #052210;
   z-index: 10;
-  padding: 0 30px;
+  padding: 10px 30px;
 `;
 const RetalkLogo = styled.div`
   font-family: "Luckiest Guy";
