@@ -1,65 +1,13 @@
 // src/pages/Home/MainPage.jsx
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import Header from '../../components/Header'; // ✅ Header 가져오기
 
 const Wrapper = styled.div`
   width: 100vw;
   min-height: 200vh;
   background: #052210;
   position: relative;
-`;
-
-const HeaderWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5vw;
-  background: #052210;
-  z-index: 10;
-  box-sizing: border-box;
-`;
-
-const RetalkLogo = styled.div`
-  font-family: 'Luckiest Guy';
-  font-size: clamp(1.2rem, 2vw, 2.5rem);
-  color: #00C853;
-  cursor: pointer;
-  white-space: nowrap;
-`;
-
-const NavGroup = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1vw;
-  max-width: 50vw;
-  justify-content: flex-end;
-`;
-
-const NavItem = styled.div`
-  font-family: 'Pretendard';
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
-  white-space: nowrap;
-`;
-
-const AuthButton = styled.button`
-  padding: 0.4rem 1rem;
-  background: #00C853;
-  border: none;
-  border-radius: 20px;
-  color: white;
-  font-family: 'Pretendard';
-  font-weight: 500;
-  font-size: 1rem;
-  cursor: pointer;
-  white-space: nowrap;
 `;
 
 const FirstSection = styled.section`
@@ -126,40 +74,9 @@ const Footer = styled.footer`
 `;
 
 export default function MainPage() {
-  const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-
-  const handleAuthClick = () => {
-    if (token) {
-      localStorage.removeItem('token');
-      alert('로그아웃 되었습니다.');
-      navigate('/');
-    } else {
-      navigate('/login');
-    }
-  };
-
-  const goToMain = () => {
-    if (window.location.pathname === '/') {
-      window.location.href = '/';
-    } else {
-      navigate('/');
-    }
-  };
-
   return (
     <Wrapper>
-      <HeaderWrapper>
-        <RetalkLogo onClick={goToMain}>RETALK</RetalkLogo>
-        <NavGroup>
-          <NavItem>Read</NavItem>
-          <NavItem>Talk</NavItem>
-          <AuthButton onClick={handleAuthClick}>
-            {token ? 'Logout' : 'Login'}
-          </AuthButton>
-        </NavGroup>
-      </HeaderWrapper>
-
+      <Header /> {/* ✅ 헤더를 직접 삽입 */}
       <FirstSection>
         <TitleBlock>
           <div>INTERACTIVE</div>

@@ -1,22 +1,23 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import ReadPage from './pages/Read/ReadPage';
+import MainPage from './pages/Home/MainPage';
 import LoginPage from './pages/Login/LoginPage';
 import SignupPage from './pages/Login/SignupPage';
-import MainPage from './pages/Home/MainPage';
+import Header from './components/Header';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/read" element={<ReadPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        {/* 나중에 TalkPage도 여기에 추가 */}
+      </Routes>
+    </Router>
   );
 }
 
