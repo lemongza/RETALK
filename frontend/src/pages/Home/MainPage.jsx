@@ -1,5 +1,6 @@
 // src/pages/Home/MainPage.jsx
 import styled from "styled-components";
+import { useEffect } from "react";
 
 const FirstSection = styled.section`
   height: 70vh;
