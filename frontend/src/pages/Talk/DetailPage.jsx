@@ -138,17 +138,7 @@ export default function DetailPage() {
       console.error("참여 요청 실패:", error);
 
       if (error.response) {
-        const errorMessage = error.response.data;
-        if (errorMessage === "모임이 존재하지 않습니다.") {
-          alert("존재하지 않는 모임입니다.");
-          navigate("/talk");
-        } else if (errorMessage === "사용자가 존재하지 않습니다.") {
-          alert("로그인이 필요한 서비스입니다.");
-        } else if (errorMessage === "이미 참여한 모임입니다.") {
-          alert("이미 참여 신청한 모임입니다.");
-        } else {
-          alert("참여 요청에 실패했습니다.");
-        }
+        alert(error.response.data.error);
       } else {
         alert("서버와의 통신 중 오류가 발생했습니다.");
       }
