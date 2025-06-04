@@ -7,6 +7,7 @@ const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  padding-top: 0;
   display: flex;
   flex-direction: column;
   gap: 2rem;

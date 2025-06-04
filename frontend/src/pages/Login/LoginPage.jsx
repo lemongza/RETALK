@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: #052210;
   display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   align-items: center;
   justify-content: center;
-  padding: 0 8vw;
+  padding: 0 10%;
   box-sizing: border-box;
 `;
 
@@ -24,14 +29,14 @@ const Content = styled.div`
 
 const LeftSection = styled.div`
   color: white;
-  font-family: 'Luckiest Guy';
+  font-family: "Luckiest Guy";
   font-size: 3.5vw;
   line-height: 1.2;
   flex: 1;
 `;
 
 const Highlight = styled.span`
-  color: #00C853;
+  color: #00c853;
 `;
 
 const RightSection = styled.div`
@@ -43,16 +48,16 @@ const RightSection = styled.div`
 `;
 
 const Logo = styled.div`
-  font-family: 'Luckiest Guy';
+  font-family: "Luckiest Guy";
   font-size: 2rem;
-  color: #00C853;
+  color: #00c853;
   margin-bottom: 2rem;
 `;
 
 const Label = styled.label`
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   font-size: 1rem;
-  color: #C4C4C4;
+  color: #c4c4c4;
   margin-top: 1rem;
 `;
 
@@ -65,7 +70,7 @@ const Input = styled.input`
   border: 1px solid #383838;
   color: white;
   border-radius: 10px;
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   font-size: 1rem;
   box-sizing: border-box;
 `;
@@ -74,7 +79,7 @@ const ButtonBase = styled.button`
   width: 100%;
   height: 40px;
   margin-top: 1rem;
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   font-size: 1rem;
   font-weight: 500;
   border-radius: 10px;
@@ -95,26 +100,26 @@ const SignupButton = styled(ButtonBase)`
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post('http://localhost:8080/api/auth/login', {
+      const res = await axios.post("http://localhost:8080/api/auth/login", {
         email,
         password,
       });
 
       const { token, name, nickname } = res.data;
 
-      localStorage.setItem('token', token);
-      localStorage.setItem('name', name);
-      localStorage.setItem('nickname', nickname);
+      localStorage.setItem("token", token);
+      localStorage.setItem("name", name);
+      localStorage.setItem("nickname", nickname);
 
-      alert('로그인 성공!');
-      navigate('/');
+      alert("로그인 성공!");
+      navigate("/");
     } catch (err) {
-      alert('로그인 실패! 이메일 또는 비밀번호를 확인하세요.');
+      alert("로그인 실패! 이메일 또는 비밀번호를 확인하세요.");
       console.error(err);
     }
   };
@@ -125,16 +130,28 @@ export default function LoginPage() {
         <LeftSection>
           <div>INTERACTIVE</div>
           <div>BOOK CLUB PLATFORM</div>
-          <div><Highlight>READ & TALK</Highlight></div>
+          <div>
+            <Highlight>READ & TALK</Highlight>
+          </div>
         </LeftSection>
         <RightSection>
           <Logo>RETALK</Logo>
           <Label>이메일</Label>
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <Label>비밀번호</Label>
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <LoginButton onClick={handleLogin}>로그인</LoginButton>
-          <SignupButton onClick={() => navigate('/signup')}>회원가입</SignupButton>
+          <SignupButton onClick={() => navigate("/signup")}>
+            회원가입
+          </SignupButton>
         </RightSection>
       </Content>
     </Wrapper>
