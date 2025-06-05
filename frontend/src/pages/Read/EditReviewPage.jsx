@@ -8,6 +8,13 @@ const Container = styled.div`
   background: #052210;
   min-height: 100vh;
   color: white;
+  font-family: 'Pretendard', sans-serif;
+`;
+
+const Title = styled.h2`
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
 `;
 
 const Form = styled.form`
@@ -29,6 +36,7 @@ const Textarea = styled.textarea`
   font-size: 1rem;
   border-radius: 8px;
   border: none;
+  font-family: 'Pretendard', sans-serif;
 `;
 
 const Button = styled.button`
@@ -81,7 +89,7 @@ export default function EditReviewPage() {
 
   return (
     <Container>
-      <h2>리뷰 수정</h2>
+      <Title>리뷰 수정</Title>
       <Form onSubmit={handleSubmit}>
         <Label htmlFor="message">리뷰 내용</Label>
         <Textarea
