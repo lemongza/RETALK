@@ -1,38 +1,64 @@
+// src/pages/Read/WriteReviewPage.jsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
-  padding: 100px 5vw 40px;
-  background: #052210;
-  min-height: 100vh;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem;
   color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-family: "Pretendard", sans-serif;
 `;
 
 const Title = styled.h2`
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
 `;
 
 const Input = styled.input`
-  width: 100%;
-  padding: 0.8rem;
-  margin-bottom: 1rem;
-  border: none;
-  border-radius: 6px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
   font-size: 1rem;
+  width: 100%;
+  margin-bottom: 1.5rem;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #00c853;
+  }
 `;
 
 const Button = styled.button`
-  padding: 0.6rem 1.2rem;
-  background: #00C853;
+  padding: 12px;
+  background: #00c853;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  margin-bottom: 2rem;
+  width: 200px;
+  margin: 0 auto 2rem;
+  display: block;
+
+  &:hover {
+    background: #00b248;
+  }
+
+  &:disabled {
+    background: #666;
+    cursor: not-allowed;
+  }
 `;
 
 const BookPreview = styled.div`
@@ -45,20 +71,35 @@ const BookPreview = styled.div`
 const Cover = styled.img`
   width: 100px;
   height: auto;
+  border-radius: 4px;
 `;
 
 const BookInfo = styled.div`
   display: flex;
   flex-direction: column;
+  font-size: 1rem;
 `;
 
 const Textarea = styled.textarea`
-  width: 100%;
-  height: 150px;
-  padding: 0.8rem;
-  border-radius: 6px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
   font-size: 1rem;
-  resize: none;
+  min-height: 200px;
+  resize: vertical;
+  width: 100%;
+  margin-bottom: 1.5rem;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #00c853;
+  }
 `;
 
 export default function WriteReviewPage() {
