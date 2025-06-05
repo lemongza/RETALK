@@ -11,7 +11,8 @@ import LoginPage from "../pages/Login/LoginPage";
 import Edit from "../pages/Talk/EditPage";
 import SignupPage from '../pages/Login/SignupPage';
 import ReadPage from "../pages/Read/ReadPage";
-import WriteReviewPage from "../pages/Read/WriteReviewPage"; 
+import WriteReviewPage from "../pages/Read/WriteReviewPage";
+import EditReviewPage from "../pages/Read/EditReviewPage"; 
 
 export default function SubRouter() {
   return (
@@ -20,6 +21,7 @@ export default function SubRouter() {
       <main className="main-container">
         <Routes>
           <Route path="/" element={<MainPage />}></Route>
+          <Route path="/read/edit/:id" element={<EditReviewPage />} />
           <Route path="/read" element={<ReadPage />} />
           {/* <Route path="*" element={<NotFound />} /> */}
           <Route path="/talk" element={<TalkBoard />}></Route>
