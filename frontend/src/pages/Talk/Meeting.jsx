@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../../api/axioInstance";
-import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import Schedule from "./Meeting/Schedule"; // 경로에 맞게 수정
 import moment from "moment";
 
 const Container = styled.div`
@@ -326,7 +326,7 @@ const DateTimeInput = styled.input`
 `;
 
 const BottomSection = styled.div`
-  display: flex;
+  display: grid;
   gap: 2rem;
   margin-top: 1rem;
 
@@ -347,222 +347,6 @@ const BottomCard = styled.div`
   }
 `;
 
-const CalendarSection = styled.div`
-  flex: 6;
-  min-width: 400px;
-`;
-
-const ScheduleDetailSection = styled.div`
-  flex: 4;
-  min-width: 300px;
-`;
-
-const ScheduleDetail = styled.div`
-  margin-top: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-`;
-
-const ScheduleHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-`;
-
-const ScheduleDate = styled.div`
-  color: #00c853;
-  font-size: 0.9rem;
-`;
-
-const NoticeSection = styled.div`
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-`;
-
-const NoticeTitle = styled.div`
-  color: white;
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-`;
-
-const NoticeContent = styled.div`
-  color: #ccc;
-  font-size: 0.9rem;
-  white-space: pre-wrap;
-  margin-bottom: 1rem;
-`;
-
-const NoticeInput = styled.textarea`
-  width: 100%;
-  min-height: 100px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  padding: 0.75rem;
-  color: white;
-  font-size: 0.9rem;
-  resize: vertical;
-  margin-bottom: 1rem;
-
-  &:focus {
-    outline: none;
-    border-color: #00c853;
-  }
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
-`;
-
-const AssignmentList = styled.div`
-  margin-top: 1rem;
-`;
-
-const AssignmentItem = styled.div`
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-`;
-
-const AssignmentContent = styled.div`
-  flex: 1;
-`;
-
-const AssignmentTitle = styled.div`
-  color: white;
-  font-size: 0.9rem;
-  margin-bottom: 0.25rem;
-`;
-
-const AssignmentDescription = styled.div`
-  color: #888;
-  font-size: 0.8rem;
-`;
-
-const AssignmentDueDate = styled.div`
-  color: #666;
-  font-size: 0.8rem;
-  margin-left: 1rem;
-`;
-
-const StyledCalendar = styled.div`
-  .react-calendar {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.05);
-    border: none;
-    border-radius: 8px;
-    padding: 1.5rem;
-    color: white;
-    font-size: 1.1rem;
-  }
-
-  .react-calendar__navigation {
-    margin-bottom: 1rem;
-  }
-
-  .react-calendar__navigation button {
-    color: white;
-    background: none;
-    font-size: 1.2rem;
-    min-width: 44px;
-
-    &:enabled:hover,
-    &:enabled:focus {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    &[disabled] {
-      background: none;
-      color: #666;
-    }
-  }
-
-  .react-calendar__month-view__weekdays {
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 0.8rem;
-    color: #00c853;
-
-    abbr {
-      text-decoration: none;
-    }
-  }
-
-  .react-calendar__tile {
-    color: white;
-    padding: 1.5rem 0.5rem;
-    background: none;
-    text-align: center;
-    line-height: 16px;
-    font-size: 0.9rem;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-
-    &:enabled:hover,
-    &:enabled:focus {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    &--now {
-      background: rgba(0, 200, 83, 0.1);
-      color: #00c853;
-    }
-
-    &--active {
-      background: #00c853 !important;
-      color: white !important;
-    }
-
-    &--past {
-      color: rgba(255, 255, 255, 0.3);
-    }
-
-    .schedule-title {
-      font-size: 0.7rem;
-      color: #00c853;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      margin-top: 0.25rem;
-    }
-  }
-
-  .react-calendar__month-view__days {
-    display: grid !important;
-    grid-template-columns: repeat(7, 1fr);
-  }
-
-  .react-calendar__month-view__days__day {
-    abbr {
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-  }
-`;
-
-const ScheduleContainer = styled.div`
-  display: flex;
-  gap: 2rem;
-
-  @media (max-width: 1200px) {
-    flex-direction: column;
-  }
-`;
-
 export default function Meeting() {
   const { id } = useParams();
   const [meetingData, setMeetingData] = useState("");
@@ -578,6 +362,7 @@ export default function Meeting() {
   ]);
   const [newTodo, setNewTodo] = useState("");
   const [endDate, setEndDate] = useState("");
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [schedules, setSchedules] = useState([
     {
@@ -879,12 +664,14 @@ export default function Meeting() {
                 {meetingData.maxMembers})
               </MemberTitle>
               <Member className="host">
-                <MemberName isHost={true}>{meetingData.hostName}</MemberName>
-                <span style={{ color: "#00c853" }}>호스트</span>
+                <MemberName isHost={true}>
+                  {meetingData.hostNickname}
+                </MemberName>
               </Member>
-              {meetingData.members?.map((member) => (
-                <Member key={member.id}>
-                  <MemberName isHost={false}>{member.name}</MemberName>
+              {/* 닉네임 정보 보여주기 */}
+              {meetingData.participants?.map((member) => (
+                <Member key={member.userId}>
+                  <MemberName isHost={false}>{member.nickname}</MemberName>
                 </Member>
               ))}
             </MemberList>
@@ -915,155 +702,8 @@ export default function Meeting() {
       </MainContent>
       <BottomSection>
         <BottomCard style={{ flex: 6 }}>
-          <TodoTitle>토론 일정</TodoTitle>
-          <ScheduleContainer>
-            <CalendarSection>
-              <StyledCalendar>
-                <Calendar
-                  onChange={setSelectedDate}
-                  value={selectedDate}
-                  locale="ko"
-                  tileClassName={tileClassName}
-                  tileContent={tileContent}
-                />
-              </StyledCalendar>
-            </CalendarSection>
-
-            <ScheduleDetailSection>
-              {selectedSchedule ? (
-                <ScheduleDetail>
-                  <ScheduleHeader>
-                    <div>
-                      <h3 style={{ color: "white", marginBottom: "0.5rem" }}>
-                        {selectedSchedule.title}
-                      </h3>
-                      <ScheduleDate>
-                        {selectedSchedule.date} {selectedSchedule.time}
-                      </ScheduleDate>
-                    </div>
-                  </ScheduleHeader>
-
-                  <NoticeSection>
-                    <NoticeTitle>공지사항</NoticeTitle>
-                    {selectedSchedule.notice && (
-                      <NoticeContent>{selectedSchedule.notice}</NoticeContent>
-                    )}
-                    {isHost && (
-                      <>
-                        <NoticeInput
-                          value={newNotice}
-                          onChange={(e) => setNewNotice(e.target.value)}
-                          placeholder="공지사항을 입력하세요..."
-                        />
-                        <AddButton
-                          onClick={() =>
-                            handleUpdateNotice(selectedSchedule.id)
-                          }
-                        >
-                          공지 등록
-                        </AddButton>
-                      </>
-                    )}
-                  </NoticeSection>
-
-                  <NoticeSection>
-                    <NoticeTitle>과제</NoticeTitle>
-                    <AssignmentList>
-                      {selectedSchedule.assignments.map((assignment) => (
-                        <AssignmentItem key={assignment.id}>
-                          <AssignmentContent>
-                            <AssignmentTitle>
-                              {assignment.title}
-                            </AssignmentTitle>
-                            <AssignmentDescription>
-                              {assignment.description}
-                            </AssignmentDescription>
-                          </AssignmentContent>
-                          <AssignmentDueDate>
-                            마감: {assignment.dueDate}
-                          </AssignmentDueDate>
-                        </AssignmentItem>
-                      ))}
-                    </AssignmentList>
-                    {isHost && (
-                      <div style={{ marginTop: "1rem" }}>
-                        <div style={{ marginBottom: "0.5rem" }}>
-                          <input
-                            type="text"
-                            value={newAssignment.title}
-                            onChange={(e) =>
-                              setNewAssignment({
-                                ...newAssignment,
-                                title: e.target.value,
-                              })
-                            }
-                            placeholder="과제 제목"
-                            style={{
-                              width: "100%",
-                              padding: "0.5rem",
-                              marginBottom: "0.5rem",
-                              background: "rgba(255, 255, 255, 0.05)",
-                              border: "1px solid rgba(255, 255, 255, 0.1)",
-                              borderRadius: "4px",
-                              color: "white",
-                            }}
-                          />
-                          <input
-                            type="text"
-                            value={newAssignment.description}
-                            onChange={(e) =>
-                              setNewAssignment({
-                                ...newAssignment,
-                                description: e.target.value,
-                              })
-                            }
-                            placeholder="과제 설명"
-                            style={{
-                              width: "100%",
-                              padding: "0.5rem",
-                              marginBottom: "0.5rem",
-                              background: "rgba(255, 255, 255, 0.05)",
-                              border: "1px solid rgba(255, 255, 255, 0.1)",
-                              borderRadius: "4px",
-                              color: "white",
-                            }}
-                          />
-                          <input
-                            type="datetime-local"
-                            value={newAssignment.dueDate}
-                            onChange={(e) =>
-                              setNewAssignment({
-                                ...newAssignment,
-                                dueDate: e.target.value,
-                              })
-                            }
-                            style={{
-                              width: "100%",
-                              padding: "0.5rem",
-                              marginBottom: "0.5rem",
-                              background: "rgba(255, 255, 255, 0.05)",
-                              border: "1px solid rgba(255, 255, 255, 0.1)",
-                              borderRadius: "4px",
-                              color: "white",
-                            }}
-                          />
-                        </div>
-                        <AddButton
-                          onClick={() =>
-                            handleAddAssignment(selectedSchedule.id)
-                          }
-                        >
-                          과제 추가
-                        </AddButton>
-                      </div>
-                    )}
-                  </NoticeSection>
-                </ScheduleDetail>
-              ) : null}
-            </ScheduleDetailSection>
-          </ScheduleContainer>
+          <Schedule meetingId={meetingData.id} isHost={isHost} />
         </BottomCard>
-
         <BottomCard style={{ flex: 4 }}>
           <TodoTitle>
             호스트가 내주는 숙제들

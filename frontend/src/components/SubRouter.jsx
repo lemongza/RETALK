@@ -8,8 +8,8 @@ import DetailPage from "../pages/Talk/DetailPage";
 import Meeting from "../pages/Talk/Meeting";
 import Mypage from "../pages/MyPage/MyPage";
 import LoginPage from "../pages/Login/LoginPage";
-import NotFound from "../pages/NotFound/NotFound";
 import Edit from "../pages/Talk/EditPage";
+import SignupPage from '../pages/Login/SignupPage';
 
 export default function SubRouter() {
   return (
@@ -26,6 +26,7 @@ export default function SubRouter() {
           <Route path="/talk/meeting/edit/:id" element={<Edit />} />
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
         </Routes>
       </main>
       <FooterBanner />
