@@ -519,6 +519,7 @@ export default function MyPage() {
       alert(
         approve ? "참여 요청을 승인했습니다." : "참여 요청을 거절했습니다."
       );
+      fetchJoinRequests(meetingId);
     } catch (error) {
       console.error("요청 처리 실패:", error);
       if (error.response?.status === 403) {

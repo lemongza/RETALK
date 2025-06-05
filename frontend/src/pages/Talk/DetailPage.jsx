@@ -283,7 +283,7 @@ export default function DetailPage() {
             <Section>
               <Label>모집 인원</Label>
               <Value>
-                {post.participant}/ {post.maxMembers} 명
+                {post.participants?.length || 0} / {post.maxMembers} 명
               </Value>
             </Section>
           </RowSection>
@@ -326,20 +326,27 @@ export default function DetailPage() {
           </div>
         ) : (
           <center>
-            <HalfButton onClick={() => setShowConfirm(true)}>
-              참여하기
-            </HalfButton>
-            {showConfirm && (
-              <Popup
-                MainText="참여 요청을 보내시겠습니까?"
-                SubText="호스트의 수락 후 참여가 확정됩니다."
-                onConfirm={() => {
-                  handleJoin();
-                }}
-                onCancel={() => {
-                  setShowConfirm(false);
-                }}
-              />
+            {post.active === false ||
+            (post.participants?.length || 0) === post.maxMembers ? (
+              <HalfRedButton>모집 마감</HalfRedButton>
+            ) : (
+              <>
+                <HalfButton onClick={() => setShowConfirm(true)}>
+                  참여하기
+                </HalfButton>
+                {showConfirm && (
+                  <Popup
+                    MainText="참여 요청을 보내시겠습니까?"
+                    SubText="호스트의 수락 후 참여가 확정됩니다."
+                    onConfirm={() => {
+                      handleJoin();
+                    }}
+                    onCancel={() => {
+                      setShowConfirm(false);
+                    }}
+                  />
+                )}
+              </>
             )}
           </center>
         )}
