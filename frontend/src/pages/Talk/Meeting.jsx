@@ -879,12 +879,14 @@ export default function Meeting() {
                 {meetingData.maxMembers})
               </MemberTitle>
               <Member className="host">
-                <MemberName isHost={true}>{meetingData.hostName}</MemberName>
-                <span style={{ color: "#00c853" }}>호스트</span>
+                <MemberName isHost={true}>
+                  {meetingData.hostNickname}
+                </MemberName>
               </Member>
-              {meetingData.members?.map((member) => (
-                <Member key={member.id}>
-                  <MemberName isHost={false}>{member.name}</MemberName>
+              {/* 닉네임 정보 보여주기 */}
+              {meetingData.participants?.map((member) => (
+                <Member key={member.userId}>
+                  <MemberName isHost={false}>{member.nickname}</MemberName>
                 </Member>
               ))}
             </MemberList>
