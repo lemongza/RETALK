@@ -1,27 +1,23 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const MainHeader = styled.div`
   width: 100%;
   height: 100%;
-  //margin: 0 auto;
   background-color: #052210;
   display: flex;
-
   flex-direction: column;
-  background-color: #052210;
 `;
+
 const Header = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 70px;
-  //width: 100vw;
   max-width: 1200px;
   margin: 0 auto;
-  //border-bottom: 2px solid #bbbbbb;
   display: flex;
   align-items: start;
   justify-content: space-between;
@@ -30,11 +26,13 @@ const Header = styled.div`
   z-index: 10;
   padding: 10px 30px;
 `;
+
 const RetalkLogo = styled.div`
   font-family: "Luckiest Guy";
   font-size: 2rem;
   color: #00c853;
-  transform: translateY(7px); //묘하게 중심이 안맞아서 내렸어요
+  transform: translateY(7px);
+  cursor: pointer;
 `;
 
 const NavGroup = styled.div`
@@ -47,9 +45,10 @@ const NavItem = styled.div`
   font-family: "Pretendard";
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: ${({ active }) => (active ? "#00c853" : "white")};
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const LoginButton = styled.div`
@@ -63,51 +62,52 @@ const LoginButton = styled.div`
   font-size: 1rem;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 export default function Banner() {
   const navigate = useNavigate();
+  const location = useLocation();
   const token = localStorage.getItem("token");
 
-  const handleTalkClick = () => {
-    navigate("/talk");
-  };
-  const handleMyClick = () => {
-    navigate("/mypage");
-  };
-  const handleLoginClick = () => {
-    if (token) {
-      localStorage.removeItem("token");
-      alert("로그아웃 되었습니다.");
-      navigate("/");
-    } else {
-      navigate("/login");
-    }
-  };
-  const handleReadClick = () => {
-    navigate("/read");
-  };
-  const handleHomeClick = () => {
-    navigate("/");
+  const handleNavigate = (path) => () => {
+    navigate(path);
   };
 
   return (
     <MainHeader>
       <Header>
-        <RetalkLogo onClick={handleHomeClick} style={{ cursor: "pointer" }}>
+        <RetalkLogo onClick={handleNavigate("/")}>
           RETALK
         </RetalkLogo>
         <NavGroup>
-          <NavItem onClick={handleReadClick} style={{ cursor: "pointer" }}>
+          <NavItem
+            onClick={handleNavigate("/read")}
+            active={location.pathname.startsWith("/read")}
+          >
             Read
           </NavItem>
-          <NavItem onClick={handleTalkClick} style={{ cursor: "pointer" }}>
+          <NavItem
+            onClick={handleNavigate("/talk")}
+            active={location.pathname.startsWith("/talk")}
+          >
             Talk
-          </NavItem>{" "}
-          <NavItem onClick={handleMyClick} style={{ cursor: "pointer" }}>
+          </NavItem>
+          <NavItem
+            onClick={handleNavigate("/mypage")}
+            active={location.pathname === "/mypage"}
+          >
             Mypage
           </NavItem>
-          <LoginButton onClick={handleLoginClick} style={{ cursor: "pointer" }}>
+          <LoginButton onClick={() => {
+            if (token) {
+              localStorage.removeItem("token");
+              alert("로그아웃 되었습니다.");
+              navigate("/");
+            } else {
+              navigate("/login");
+            }
+          }}>
             {token ? "Logout" : "Login"}
           </LoginButton>
         </NavGroup>
