@@ -10,7 +10,8 @@ import Mypage from "../pages/MyPage/MyPage";
 import LoginPage from "../pages/Login/LoginPage";
 import Edit from "../pages/Talk/EditPage";
 import SignupPage from '../pages/Login/SignupPage';
-import ReadPage from "../pages/Read/ReadPage"; // ← 이 줄 추가
+import ReadPage from "../pages/Read/ReadPage";
+import WriteReviewPage from "../pages/Read/WriteReviewPage"; 
 
 export default function SubRouter() {
   return (
@@ -29,6 +30,7 @@ export default function SubRouter() {
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/read/write" element={<WriteReviewPage />} /> 
         </Routes>
       </main>
       <FooterBanner />
