@@ -8,6 +8,7 @@ const Container = styled.div`
   background: #052210;
   min-height: 100vh;
   position: relative;
+  font-family: 'Pretendard', sans-serif;
 `;
 
 const CardWrapper = styled.div`

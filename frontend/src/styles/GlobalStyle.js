@@ -1,4 +1,3 @@
-// src/styles/GlobalStyle.js
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -14,14 +13,19 @@ const GlobalStyle = createGlobalStyle`
     font-style: normal;
   }
 
+  /* ✅ 기본 Reset + 모든 요소에 폰트 적용 */
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Pretendard', sans-serif; /* ✅ 여기에 추가 */
   }
 
+  /* ✅ body에 중복 지정해도 OK */
   body {
     font-family: 'Pretendard', sans-serif;
+    background-color: #fff;
+    color: #000;
   }
 `;
 
