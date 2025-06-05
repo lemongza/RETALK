@@ -4,34 +4,27 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const MainHeader = styled.div`
   width: 100%;
-  height: 100%;
   background-color: #052210;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Header = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  height: 70px;
+  z-index: 1000;
+`;
+
+const HeaderInner = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  height: 80px;
   display: flex;
-  align-items: start;
+  align-items: center;
   justify-content: space-between;
-  line-height: 80px;
-  background: #052210;
-  z-index: 10;
-  padding: 10px 30px;
+  padding: 0 30px;
 `;
 
 const RetalkLogo = styled.div`
   font-family: "Luckiest Guy";
   font-size: 2rem;
   color: #00c853;
-  transform: translateY(7px);
   cursor: pointer;
 `;
 
@@ -45,10 +38,8 @@ const NavItem = styled.div`
   font-family: "Pretendard";
   font-size: 1rem;
   font-weight: 600;
-  color: ${({ active }) => (active ? "#00c853" : "white")};
-  display: flex;
-  align-items: center;
   cursor: pointer;
+  color: ${(props) => (props.active ? "#00c853" : "white")};
 `;
 
 const LoginButton = styled.div`
@@ -70,48 +61,46 @@ export default function Banner() {
   const location = useLocation();
   const token = localStorage.getItem("token");
 
-  const handleNavigate = (path) => () => {
-    navigate(path);
-  };
+  const handleNavigate = (path) => navigate(path);
 
   return (
     <MainHeader>
-      <Header>
-        <RetalkLogo onClick={handleNavigate("/")}>
-          RETALK
-        </RetalkLogo>
+      <HeaderInner>
+        <RetalkLogo onClick={() => handleNavigate("/")}>RETALK</RetalkLogo>
         <NavGroup>
           <NavItem
-            onClick={handleNavigate("/read")}
+            onClick={() => handleNavigate("/read")}
             active={location.pathname.startsWith("/read")}
           >
             Read
           </NavItem>
           <NavItem
-            onClick={handleNavigate("/talk")}
+            onClick={() => handleNavigate("/talk")}
             active={location.pathname.startsWith("/talk")}
           >
             Talk
           </NavItem>
           <NavItem
-            onClick={handleNavigate("/mypage")}
-            active={location.pathname === "/mypage"}
+            onClick={() => handleNavigate("/mypage")}
+            active={location.pathname.startsWith("/mypage")}
           >
             Mypage
           </NavItem>
-          <LoginButton onClick={() => {
-            if (token) {
-              localStorage.removeItem("token");
-              alert("로그아웃 되었습니다.");
-              navigate("/");
-            } else {
-              navigate("/login");
-            }
-          }}>
+          <LoginButton
+            onClick={() => {
+              if (token) {
+                localStorage.removeItem("token");
+                alert("로그아웃 되었습니다.");
+                navigate("/");
+              } else {
+                navigate("/login");
+              }
+            }}
+          >
             {token ? "Logout" : "Login"}
           </LoginButton>
         </NavGroup>
-      </Header>
+      </HeaderInner>
     </MainHeader>
   );
 }

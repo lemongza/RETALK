@@ -7,8 +7,27 @@ const Container = styled.div`
   padding: 120px 5vw 5vw;
   background: #052210;
   min-height: 100vh;
-  position: relative;
   font-family: 'Pretendard', sans-serif;
+`;
+
+const TopBar = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+`;
+
+const WriteButton = styled.button`
+  background: #00c853;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-family: "Pretendard";
+  font-weight: 500;
+  cursor: pointer;
+  &:hover {
+    background: #00b248;
+  }
 `;
 
 const CardWrapper = styled.div`
@@ -85,29 +104,13 @@ const ActionButton = styled.button`
   color: #fff;
 `;
 
-const AddButton = styled.button`
-  position: fixed;
-  bottom: 40px;
-  right: 40px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: white;
-  color: #00C853;
-  font-size: 2.4rem;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  z-index: 20;
-`;
-
 export default function ReadPage() {
   const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
   const currentUserNickname = localStorage.getItem('nickname');
 
   useEffect(() => {
-    console.log('✅ 현재 사용자 닉네임:', currentUserNickname);
+    window.scrollTo(0, 0);
 
     const fetchReviews = async () => {
       try {
@@ -117,7 +120,6 @@ export default function ReadPage() {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log('📦 불러온 리뷰:', res.data);
         setReviews(res.data);
       } catch (err) {
         console.error('리뷰 불러오기 실패:', err);
@@ -153,43 +155,40 @@ export default function ReadPage() {
 
   return (
     <Container>
+      <TopBar>
+        <WriteButton onClick={goToWritePage}>리뷰 작성</WriteButton>
+      </TopBar>
       {reviews.length === 0 ? (
         <div style={{ color: 'white', textAlign: 'center' }}>아직 작성된 리뷰가 없습니다.</div>
       ) : (
         <CardWrapper>
-          {reviews.map((review) => {
-            console.log('👤 리뷰 작성자:', review.reviewerNickname);
-            console.log('🧑 현재 사용자:', currentUserNickname);
-
-            return (
-              <ReviewCard key={review.reviewId}>
-                <Header>
-                  <span>{review.reviewerNickname}</span>
-                  {review.reviewerNickname === currentUserNickname && (
-                    <ButtonGroup>
-                      <ActionButton variant="edit" onClick={() => handleEdit(review.reviewId)}>
-                        수정
-                      </ActionButton>
-                      <ActionButton variant="delete" onClick={() => handleDelete(review.reviewId)}>
-                        삭제
-                      </ActionButton>
-                    </ButtonGroup>
-                  )}
-                </Header>
-                <BookInfo>
-                  <BookCover src={review.bookCoverUrl} alt={review.bookTitle} />
-                  <BookDetails>
-                    <BookTitle>{review.bookTitle}</BookTitle>
-                    <BookAuthor>{review.bookAuthor}</BookAuthor>
-                  </BookDetails>
-                </BookInfo>
-                <Message>"{review.message}"</Message>
-              </ReviewCard>
-            );
-          })}
+          {reviews.map((review) => (
+            <ReviewCard key={review.reviewId}>
+              <Header>
+                <span>{review.reviewerNickname}</span>
+                {review.reviewerNickname === currentUserNickname && (
+                  <ButtonGroup>
+                    <ActionButton variant="edit" onClick={() => handleEdit(review.reviewId)}>
+                      수정
+                    </ActionButton>
+                    <ActionButton variant="delete" onClick={() => handleDelete(review.reviewId)}>
+                      삭제
+                    </ActionButton>
+                  </ButtonGroup>
+                )}
+              </Header>
+              <BookInfo>
+                <BookCover src={review.bookCoverUrl} alt={review.bookTitle} />
+                <BookDetails>
+                  <BookTitle>{review.bookTitle}</BookTitle>
+                  <BookAuthor>{review.bookAuthor}</BookAuthor>
+                </BookDetails>
+              </BookInfo>
+              <Message>"{review.message}"</Message>
+            </ReviewCard>
+          ))}
         </CardWrapper>
       )}
-      <AddButton onClick={goToWritePage}>+</AddButton>
     </Container>
   );
 }
