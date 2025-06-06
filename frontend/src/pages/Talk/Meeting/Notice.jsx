@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "../../../api/axioInstance";
 import styled from "styled-components";
 
-export default function Notice({ isHost }) {
+export default function Notice({ meetingId, isHost }) {
   const [notices, setNotices] = useState([]);
   const [newNotice, setNewNotice] = useState({ title: "", content: "" });
 
   const fetchNotices = async () => {
     try {
-      const res = await axios.get("/notices");
+      const res = await axios.get(`/meetings/${meetingId}/notices`);
       setNotices(res.data);
     } catch (err) {
       console.error("공지사항 조회 실패:", err);
@@ -22,7 +22,7 @@ export default function Notice({ isHost }) {
     }
     try {
       const token = localStorage.getItem("token");
-      await axios.post("/notices", newNotice, {
+      await axios.post(`/meetings/${meetingId}/notices`, newNotice, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -36,7 +36,7 @@ export default function Notice({ isHost }) {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`/notices/${id}`, {
+      await axios.delete(`/meetings/${meetingId}/notices/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchNotices();
