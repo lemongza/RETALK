@@ -21,12 +21,12 @@ export default function SubRouter() {
       <Banner />
       <main className="main-container">
         <Routes>
-          <Route path="/" element={<MainPage />}></Route>
+          <Route path="/" element={<MainPage />} />
           <Route path="/read/edit/:id" element={<EditReviewPage />} />
           <Route path="/read" element={<ReadPage />} />
           {/* <Route path="*" element={<NotFound />} /> */}
-          <Route path="/talk" element={<TalkBoard />}></Route>
-          <Route path="/talk/write" element={<WritePage />}></Route>
+          <Route path="/talk" element={<TalkBoard />} />
+          <Route path="/talk/write" element={<WritePage />} />
           <Route path="/talk/:id" element={<DetailPage />} />
           <Route path="/talk/meeting/:id" element={<Meeting />} />
           <Route path="/talk/meeting/edit/:id" element={<Edit />} />

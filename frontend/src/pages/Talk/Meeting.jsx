@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+// src/pages/Talk/Meeting.jsx
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import axios from "../../api/axioInstance";
+import axios from "../../../api/axioInstance";
+import ChatComponent from "../../../components/chat/ChatComponent";
 import "react-calendar/dist/Calendar.css";
-import Schedule from "./Meeting/Schedule";
-import Notice from "./Meeting/Notice";
-import ChatComponent from "./Meeting/ChatComponent";
+import Schedule from "./Schedule";
+import Notice from "./Notice";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -14,105 +15,77 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-
   @media (max-width: 768px) {
     padding: 1rem;
   }
 `;
-
 const MainContent = styled.div`
   display: flex;
   gap: 2rem;
-
   @media (max-width: 768px) {
     flex-direction: column;
   }
 `;
-
 const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
   width: 300px;
-
   @media (max-width: 768px) {
     width: 100%;
   }
 `;
-
 const TabContainer = styled.div`
   display: none;
-
   @media (max-width: 768px) {
     display: flex;
     margin-bottom: 1rem;
   }
 `;
-
 const Tab = styled.button`
   flex: 1;
   padding: 0.75rem;
-  background: ${(props) =>
-    props.active ? "#00c853" : "rgba(255, 255, 255, 0.1)"};
+  background: ${(p) => (p.active ? "#00c853" : "rgba(255,255,255,0.1)")};
   color: white;
   border: none;
   cursor: pointer;
   font-size: 1rem;
-
   &:first-child {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
   }
-
   &:last-child {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
   }
 `;
-
 const Sidebar = styled.div`
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
   border-radius: 8px;
   padding: 1.5rem;
-
   @media (max-width: 768px) {
-    display: ${(props) => (props.visible ? "block" : "none")};
+    display: ${(p) => (p.visible ? "block" : "none")};
   }
 `;
-
-const BookInfo = styled.div`
-  color: white;
-`;
-
+const BookInfo = styled.div` color: white; `;
 const BookCover = styled.img`
   width: 100%;
-  /* height: 300px; */
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 1rem;
 `;
-
-const BookTitle = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-`;
-
+const BookTitle = styled.h2` font-size: 1.5rem; margin-bottom: 0.5rem; `;
 const BookAuthor = styled.p`
   color: #c4c4c4;
   font-size: 1rem;
   margin-bottom: 1rem;
 `;
-
-const MemberList = styled.div`
-  color: white;
-`;
-
+const MemberList = styled.div` color: white; `;
 const MemberTitle = styled.h3`
   font-size: 1.2rem;
   margin-bottom: 1rem;
   color: #00c853;
 `;
-
 const Member = styled.div`
   display: flex;
   align-items: center;
@@ -120,130 +93,107 @@ const Member = styled.div`
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-
-  &.host {
-    background: rgba(0, 200, 83, 0.1);
-  }
+  background: rgba(255,255,255,0.05);
+  &.host { background: rgba(0,200,83,0.1); }
 `;
-
-const MemberName = styled.span`
-  color: ${(props) => (props.isHost ? "#00c853" : "white")};
-`;
-
+const MemberName = styled.span` color: ${(p) => (p.isHost ? "#00c853" : "white")}; `;
 const ChatContainer = styled.div`
   flex: 1;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
 `;
-
 const ChatHeader = styled.div`
   padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   color: white;
 `;
-
 const BottomSection = styled.div`
   display: grid;
   gap: 2rem;
   margin-top: 1rem;
-
-  @media (max-width: 1200px) {
-    flex-direction: column;
-  }
+  @media (max-width:1200px) { grid-template-columns: 1fr; }
 `;
-
 const BottomCard = styled.div`
   flex: 1;
   min-width: 300px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
   border-radius: 8px;
   padding: 1.5rem;
-
-  @media (max-width: 1200px) {
-    min-width: 100%;
-  }
 `;
 
 export default function Meeting() {
   const { id } = useParams();
-  const [meetingData, setMeetingData] = useState("");
+  const [meetingData, setMeetingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("book");
   const [isHost, setIsHost] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const token = localStorage.getItem("token");
 
-  const parseJwt = (token) => {
+  // JWT에서 sub(이메일)만 파싱
+  const parseJwt = (tk) => {
     try {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
+      const p = tk.split(".")[1];
+      const json = atob(p.replace(/-/g, "+").replace(/_/g, "/"));
+      return JSON.parse(
+        decodeURIComponent(
+          json
+            .split("")
+            .map((c) =>
+              "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+            )
+            .join("")
+        )
       );
-      return JSON.parse(jsonPayload);
-    } catch (e) {
+    } catch {
       return null;
     }
   };
 
+  // SendBird용 userId: 이메일에 @나 .이 있으면 _로 치환
+  const sbUserId = useMemo(
+    () => (userEmail.includes("@") ? userEmail.replace(/[@.]/g, "_") : userEmail),
+    [userEmail]
+  );
+
+  // 모임 데이터 로드
   useEffect(() => {
-    const fetchMeetingData = async () => {
+    (async () => {
+      setLoading(true);
       try {
-        // 토큰에서 사용자 정보 추출
-        const tokenData = parseJwt(token);
-        if (token) {
-          setUserEmail(tokenData.sub);
-        }
+        const payload = parseJwt(token);
+        if (payload?.sub) setUserEmail(payload.sub);
 
-        const response = await axios.get(`/meetings/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await axios.get(`/meetings/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-
-        setMeetingData(response.data);
-        // 호스트 이메일과 현재 사용자 이메일 비교
-        setIsHost(response.data.hostEmail === tokenData?.sub);
-      } catch (error) {
-        console.error("미팅 데이터 가져오기 실패:", error);
-        if (error.message === "로그인이 필요합니다.") {
-          alert("로그인이 필요한 서비스입니다.");
-        }
+        setMeetingData(res.data);
+        setIsHost(res.data.hostEmail === payload?.sub);
+      } catch (err) {
+        console.error("미팅 정보 로드 실패:", err);
+        alert("미팅 정보를 불러오는 중 오류가 발생했습니다.");
       } finally {
         setLoading(false);
       }
-    };
+    })();
+  }, [id, token]);
 
-    fetchMeetingData();
-  }, [id]);
-
-  if (loading) {
+  if (loading)
     return (
       <Container>
-        <div style={{ color: "white", textAlign: "center", width: "100%" }}>
-          로딩 중...
-        </div>
+        <div style={{ color: "white", textAlign: "center" }}>로딩 중...</div>
       </Container>
     );
-  }
-
-  if (!meetingData) {
+  if (!meetingData)
     return (
       <Container>
-        <div style={{ color: "white", textAlign: "center", width: "100%" }}>
+        <div style={{ color: "white", textAlign: "center" }}>
           미팅 정보를 찾을 수 없습니다.
         </div>
       </Container>
     );
-  }
 
   return (
     <Container>
@@ -263,7 +213,6 @@ export default function Meeting() {
               참여자 목록
             </Tab>
           </TabContainer>
-
           <Sidebar visible={activeTab === "book"}>
             <BookInfo>
               <BookCover
@@ -274,35 +223,34 @@ export default function Meeting() {
               <BookAuthor>{meetingData.bookAuthor}</BookAuthor>
             </BookInfo>
           </Sidebar>
-
           <Sidebar visible={activeTab === "members"}>
             <MemberList>
               <MemberTitle>
-                참여자 목록 ({meetingData.participants?.length || 0}/
-                {meetingData.maxMembers})
+                참여자 목록 (
+                {meetingData.participants?.length || 0}/{meetingData.maxMembers}
+                )
               </MemberTitle>
               <Member className="host">
-                <MemberName isHost={true}>
+                <MemberName isHost>
                   {meetingData.hostNickname}
                 </MemberName>
               </Member>
-              {/* 닉네임 정보 보여주기 */}
-              {meetingData.participants?.map((member) => (
-                <Member key={member.userId}>
-                  <MemberName isHost={false}>{member.nickname}</MemberName>
+              {meetingData.participants?.map((m) => (
+                <Member key={m.userId}>
+                  <MemberName>{m.nickname}</MemberName>
                 </Member>
               ))}
             </MemberList>
           </Sidebar>
         </SidebarContainer>
-
         <ChatContainer>
-          <ChatHeader>실시간 채팅 - {meetingData.title}</ChatHeader>
-
+          <ChatHeader>
+            실시간 채팅 – {meetingData.title}
+          </ChatHeader>
           <ChatComponent
-            appId="F36A6CE4-7BB5-4446-B6B6-440DCCD40F2C"
-            userId={userEmail}
-            channelName="Book-Club-Room(예시)"
+            appId={process.env.REACT_APP_SENDBIRD_APP_ID}
+            userId={sbUserId}
+            channelName={`meeting_${meetingData.id}`}
           />
         </ChatContainer>
       </MainContent>
@@ -311,7 +259,7 @@ export default function Meeting() {
           <Schedule meetingId={meetingData.id} isHost={isHost} />
         </BottomCard>
         <BottomCard>
-          <Notice meetingId={meetingData.id} isHost={isHost} />
+          <Notice isHost={isHost} />
         </BottomCard>
       </BottomSection>
     </Container>

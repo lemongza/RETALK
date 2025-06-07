@@ -2,6 +2,7 @@ import axios from "../../api/axioInstance";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { HalfButton, HalfRedButton } from "../../components/common/Button";
+import ChatComponent from "../../components/chat/ChatComponent"; //추가한 내용
 
 import styled from "styled-components";
 import Popup from "../../components/common/Popup";
