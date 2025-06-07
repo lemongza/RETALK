@@ -284,7 +284,7 @@ export default function Meeting() {
           <Schedule meetingId={meetingData.id} isHost={isHost} />
         </BottomCard>
         <BottomCard>
-          <Notice isHost={isHost} />
+          <Notice meetingId={meetingData.id} isHost={isHost} />
         </BottomCard>
       </BottomSection>
     </Container>
