@@ -114,11 +114,12 @@ export default function LoginPage() {
         password,
       });
 
-      const { token, name, nickname } = res.data;
+      const { token, name, nickname, role } = res.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("name", name);
       localStorage.setItem("nickname", nickname);
+      localStorage.setItem("role", role);
 
       alert("로그인 성공!");
       navigate("/");

@@ -60,6 +60,7 @@ export default function Banner() {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
   const handleNavigate = (path) => navigate(path);
 
@@ -86,10 +87,23 @@ export default function Banner() {
           >
             Mypage
           </NavItem>
+
+          {role === "ADMIN" && (
+            <NavItem
+              onClick={() => handleNavigate("/admin")}
+              active={location.pathname.startsWith("/admin")}
+            >
+              Admin
+            </NavItem>
+          )}
+
           <LoginButton
             onClick={() => {
               if (token) {
                 localStorage.removeItem("token");
+                localStorage.removeItem("name");
+                localStorage.removeItem("nickname");
+                localStorage.removeItem("role");
                 alert("로그아웃 되었습니다.");
                 navigate("/");
               } else {
