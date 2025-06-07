@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   /* ✅ 웹 폰트 import */
@@ -11,6 +11,11 @@ const GlobalStyle = createGlobalStyle`
     src: url('/assets/fonts/BMHANNA_11yrs.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+  }
+  
+  @font-face {
+  font-family: "Pretendard";
+  src: url("./assets/fonts/PretendardVariable.ttf") format("truetype");
   }
 
   /* ✅ 기본 Reset + 모든 요소에 폰트 적용 */
