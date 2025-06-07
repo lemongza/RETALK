@@ -417,6 +417,24 @@ export default function MyPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!token) return;
+    const checkRole = async () => {
+      try {
+        const res = await axios.get("/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.data.role !== "user") {
+          alert("접근 권한이 없습니다.");
+          navigate("/");
+        }
+      } catch (e) {
+        // ignore, handled elsewhere
+      }
+    };
+    checkRole();
+  }, []);
   useEffect(() => {
     //스크롤바 상단으로 초기화
     window.scrollTo(0, 0);
