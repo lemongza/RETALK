@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  width: 100%;
   background: #052210;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 0 8vw;
-  box-sizing: border-box;
+`;
+
+const FormWrapper = styled.div`
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 60px 20px;
 `;
 
 const Title = styled.div`
@@ -27,8 +30,6 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 100%;
-  max-width: 500px;
 `;
 
 const Field = styled.div`
@@ -80,6 +81,10 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleSignup = async (e) => {
     e.preventDefault();
 
@@ -106,30 +111,32 @@ export default function SignupPage() {
 
   return (
     <Wrapper>
-      <Title>RETALK에 가입하고 독서의 즐거움을 함께 느껴보세요</Title>
-      <Form onSubmit={handleSignup}>
-        <Field>
-          <Label>이름</Label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
-        </Field>
-        <Field>
-          <Label>닉네임</Label>
-          <Input value={nickName} onChange={(e) => setNickName(e.target.value)} />
-        </Field>
-        <Field>
-          <Label>이메일</Label>
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </Field>
-        <Field>
-          <Label>비밀번호</Label>
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </Field>
-        <Field>
-          <Label>비밀번호 확인</Label>
-          <Input type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} />
-        </Field>
-        <Button type="submit">가입하기</Button>
-      </Form>
+      <FormWrapper>
+        <Title>RETALK에 가입하고 독서의 즐거움을 함께 느껴보세요</Title>
+        <Form onSubmit={handleSignup}>
+          <Field>
+            <Label>이름</Label>
+            <Input value={name} onChange={(e) => setName(e.target.value)} />
+          </Field>
+          <Field>
+            <Label>닉네임</Label>
+            <Input value={nickName} onChange={(e) => setNickName(e.target.value)} />
+          </Field>
+          <Field>
+            <Label>이메일</Label>
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </Field>
+          <Field>
+            <Label>비밀번호</Label>
+            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </Field>
+          <Field>
+            <Label>비밀번호 확인</Label>
+            <Input type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} />
+          </Field>
+          <Button type="submit">가입하기</Button>
+        </Form>
+      </FormWrapper>
     </Wrapper>
   );
 }
