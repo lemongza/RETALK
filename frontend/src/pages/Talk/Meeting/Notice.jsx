@@ -74,27 +74,29 @@ export default function Notice({ meetingId, isHost }) {
         </NoticeList>
       </NoticeListSection>
 
-      <NoticeFormSection>
-        <NoticeTitle>공지사항 작성</NoticeTitle>
-        <FormSection>
-          <input
-            type="text"
-            placeholder="제목"
-            value={newNotice.title}
-            onChange={(e) =>
-              setNewNotice({ ...newNotice, title: e.target.value })
-            }
-          />
-          <textarea
-            placeholder="내용"
-            value={newNotice.content}
-            onChange={(e) =>
-              setNewNotice({ ...newNotice, content: e.target.value })
-            }
-          />
-          <button onClick={handleSubmit}>공지 등록</button>
-        </FormSection>
-      </NoticeFormSection>
+      {isHost && (
+        <NoticeFormSection>
+          <NoticeTitle>공지사항 작성</NoticeTitle>
+          <FormSection>
+            <input
+              type="text"
+              placeholder="제목"
+              value={newNotice.title}
+              onChange={(e) =>
+                setNewNotice({ ...newNotice, title: e.target.value })
+              }
+            />
+            <textarea
+              placeholder="내용"
+              value={newNotice.content}
+              onChange={(e) =>
+                setNewNotice({ ...newNotice, content: e.target.value })
+              }
+            />
+            <button onClick={handleSubmit}>공지 등록</button>
+          </FormSection>
+        </NoticeFormSection>
+      )}
     </Container>
   );
 }
