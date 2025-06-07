@@ -22,7 +22,7 @@ export default function SubRouter() {
       <Banner />
       <main className="main-container">
         <Routes>
-          <Route path="/" element={<MainPage />}></Route>
+          <Route path="/" element={<MainPage />} />
           <Route path="/read/edit/:id" element={<EditReviewPage />} />
           <Route path="/read" element={<ReadPage />} />
           <Route path="*" element={<NotFound />} />
