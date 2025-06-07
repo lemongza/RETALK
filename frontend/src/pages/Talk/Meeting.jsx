@@ -272,11 +272,17 @@ export default function Meeting() {
         </SidebarContainer>
         <ChatContainer>
           <ChatHeader>{meetingData.title} 의 실시간 채팅</ChatHeader>
-          <ChatComponent
-            appId={process.env.REACT_APP_SENDBIRD_APP_ID}
-            userId={sbUserId}
-            channelName={`meeting_${meetingData.id}`}
-          />
+          {meetingData.chatEnabled ? (
+              <ChatComponent
+                appId={process.env.REACT_APP_SENDBIRD_APP_ID}
+                userId={sbUserId}
+                channelName={`meeting_${meetingData.id}`}
+              />
+            ) : (
+              <div style={{ color: "gray", padding: "1rem" }}>
+                현재 이 모임의 채팅은 비활성화되어 있습니다.
+              </div>
+            )}
         </ChatContainer>
       </MainContent>
       <BottomSection>
