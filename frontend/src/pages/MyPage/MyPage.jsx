@@ -417,15 +417,13 @@ export default function MyPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     if (!token) return;
     const checkRole = async () => {
       try {
-        const res = await axios.get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (res.data.role !== "user") {
+        if (role === "ADMIN") {
           alert("접근 권한이 없습니다.");
           navigate("/");
         }
